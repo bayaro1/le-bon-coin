@@ -1,0 +1,37 @@
+<nav class="navbar navbar-expand-lg bg-light">
+    <div class="container">
+        <div class="container-fluid">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                    <a style="color: orange; font-weight: bold; font-size: 1.5em;" class="nav-link {% if current_menu is defined and current_menu is same as 'home' %}active{% endif %}" aria-current="page" href="{{ path('home_index') }}">lebongroin</a>
+                    </li>
+                    <li class="nav-item ms-4">
+                        <a class="btn" style="background-color: orange; color: white; font-weight: bold;" href="#"><i class="bi bi-plus-square"></i> Déposer une annonce</a>
+                    </li>
+                    <li class="nav-item ms-4">
+                        <a class="nav-link" {% if current_menu is defined and current_menu is same as 'search' %}style="border-bottom-style: solid; border-bottom-color: orange;"{% endif %} href="{{ path('search_index') }}"><i class="bi bi-search"></i> Rechercher</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item" style="text-align: center;">
+                        <a class="nav-link" href="#"><i class="bi bi-bell"></i><br>Mes recherches</a>
+                    </li>
+                    <li class="nav-item" style="text-align: center;">
+                        <a class="nav-link" href="#"> <i class="bi bi-heart"></i><br>Favoris</a>
+                    </li>
+                    <li class="nav-item" style="text-align: center;">
+                        
+                        <a class="nav-link" href="#"><i class="bi bi-chat-right-text"></i><br>Messages</a>
+                    </li>
+                    <li class="nav-item" style="text-align: center;">
+                        <a class="nav-link" href="#"><i class="bi bi-person"></i><br>Se connecter</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</nav>

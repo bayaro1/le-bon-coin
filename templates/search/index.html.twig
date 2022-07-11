@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Recherche - lebongroin{% endblock %}
+
+{% block body %}
+
+    {% include "search/_search_filters.html.twig" %}
+
+
+    
+    <h3>Annonces : </h3>
+
+    {% for product in products %}
+        {% include "search/_product_card.html.twig" %}
+    {% endfor %}
+
+{% endblock %}
