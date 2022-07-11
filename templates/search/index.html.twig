@@ -10,8 +10,12 @@
     
     <h3>Annonces : </h3>
 
-    {% for product in products %}
+    {% for product in paginator.items %}
         {% include "search/_product_card.html.twig" %}
     {% endfor %}
 
+    {# pagination links #}
+        {% autoescape false %}
+            {{ paginator.paginationLinks }}
+        {% endautoescape %}
 {% endblock %}

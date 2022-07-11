@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Repository\ProductRepository;
+use App\Services\Paginator;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -21,12 +22,12 @@ class SearchController extends AbstractController
 
 
     #[Route('/annonces', name: 'search_index')]
-    public function index(): Response
+    public function index(Paginator $paginator, Request $request): Response
     {
-        $products = $this->repository->findAll();
+        $paginator->configure($request, $this->repository->findAllQuery(), 10);
         return $this->render('search/index.html.twig', [
             'current_menu' => 'search',
-            'products' => $products
+            'paginator' => $paginator
         ]);
     }
 
