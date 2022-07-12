@@ -18,7 +18,7 @@ class AppFixtures extends Fixture
         $faker = Factory::create('fr_FR');
 
 
-        for ($i=0; $i < 50; $i++) { 
+        for ($i=0; $i < 500; $i++) { 
             $product = new Product;
             $product->setTitle($faker->sentence(3))
                     ->setDescription($faker->paragraph(5))
