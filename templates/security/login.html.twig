@@ -1,0 +1,34 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Se connecter - lebongroin{% endblock %}
+
+{% block body %}
+    <h3>Se connecter</h3>
+
+    {% if error %}
+        <div class="alert alert-danger">Identifiants invalides !</div>
+    {% endif %}
+
+
+
+    <form class="form" action="{{ path('security_login') }}" method="post">
+
+    <div class="form-group">
+        <label for="_username" class="form-label">Adresse email</label>
+        <input type="text" class="form-control" id="_username" name="_username" value="{{ last_username }}">
+    </div>
+
+    <div class="form-group">
+        <label for="_password" class="form-label">Mot de passe</label>
+        <input type="password" class="form-control" id="_password" name="_password">
+    </div>
+
+    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+    {# If you want to control the URL the user is redirected to on success
+        <input type="hidden" name="_target_path" value="/account"/> #}
+
+    <button type="submit" class="btn btn-warning">Valider</button>
+
+
+{% endblock %}
