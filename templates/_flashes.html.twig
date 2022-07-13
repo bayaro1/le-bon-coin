@@ -1,0 +1,14 @@
+
+{% for key, messages in app.flashes %}
+    {% for message in messages %}
+        <div class="alert alert-{{ key }}">{{ message }}</div>
+    {% endfor %}
+{% endfor %}
+
+
+
+<div class="text-success">
+    <ul>
+        <li>ajouter confirmation du mot de passe</li>
+    </ul>
+</div>

@@ -56,7 +56,8 @@ class AppFixtures extends Fixture
                 ->setPassword($userPassword)
                 ->setEmail('jean@gmail.com')
                 ;
-        $manager->persist($admin, $user);
+        $manager->persist($admin);
+        $manager->persist($user);
 
 
         $manager->flush();

@@ -30,6 +30,9 @@
         {% include "_navbar.html.twig" %}
         
         <div class="container mt-4">
+
+            {% include "_flashes.html.twig" %}
+            
             {% block body %}{% endblock %}
         </div>
 
