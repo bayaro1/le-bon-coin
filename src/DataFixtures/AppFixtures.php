@@ -40,10 +40,13 @@ class AppFixtures extends Fixture
                 ->setRoles(['ROLE_ADMIN'])
                 ;
         
+        $manager->persist($admin);
+        
         $user->setUsername('jean')
                 ->setPassword($userPassword)
                 ->setEmail('jean@gmail.com')
                 ;
+        $manager->persist($user);
 
         $users = [];
         for ($i=0; $i < 20; $i++) { 
@@ -53,9 +56,8 @@ class AppFixtures extends Fixture
                 ->setEmail($faker->email())
                 ;
             $users[] = $user;
+            $manager->persist($user);
         }
-        $manager->persist($admin);
-        $manager->persist($user);
 
         /**création des catégories */
         $categories = [];

@@ -25,6 +25,7 @@ class ProductRepository extends ServiceEntityRepository
     public function findAllQuery()
     {
         return $this->createQueryBuilder('p')
+                    ->orderBy('p.createdAt', 'desc')
                     ->getQuery()
                     ;
     }

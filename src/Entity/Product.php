@@ -2,9 +2,11 @@
 
 namespace App\Entity;
 
-use App\Repository\ProductRepository;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\ProductRepository;
+use DateTimeImmutable;
 
+#[ORM\HasLifecycleCallbacks]
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
 class Product
 {
@@ -39,6 +41,11 @@ class Product
     #[ORM\JoinColumn(nullable: false)]
     private $user;
 
+    #[ORM\PrePersist]
+    public function prePersist()
+    {
+        $this->createdAt = new DateTimeImmutable();
+    }
 
     public function getId(): ?int
     {

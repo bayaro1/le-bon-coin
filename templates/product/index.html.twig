@@ -4,14 +4,14 @@
 
 {% block body %}
 
-    {% include "search/_search_filters.html.twig" %}
+    {% include "product/_search_filters.html.twig" %}
 
 
     
     <h3>Annonces : </h3>
 
     {% for product in paginator.items %}
-        {% include "search/_product_card.html.twig" %}
+        {% include "product/_product_card.html.twig" %}
     {% endfor %}
 
 

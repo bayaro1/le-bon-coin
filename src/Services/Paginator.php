@@ -83,7 +83,7 @@ class Paginator
         }
         if($last > $this->totalPages)
         {
-            $last = $this->totalPages;
+            $last = $this->totalPages + 1;
             $first = ($this->totalPages - 12) > 1 ? ($this->totalPages - 12): 1;
         }
         

@@ -10,10 +10,10 @@
                         <a style="color: orange; font-weight: bold; font-size: 1.5em;" class="nav-link {% if current_menu is defined and current_menu is same as 'home' %}active{% endif %}" aria-current="page" href="{{ path('home_index') }}">lebongroin</a>
                     </li>
                     <li class="nav-item ms-4">
-                        <a class="btn" style="background-color: orange; color: white; font-weight: bold;" href="#"><i class="bi bi-plus-square"></i> Déposer une annonce</a>
+                        <a class="btn" style="background-color: orange; color: white; font-weight: bold;" href="{{ path('product_new') }}"><i class="bi bi-plus-square"></i> Déposer une annonce</a>
                     </li>
                     <li class="nav-item ms-4">
-                        <a class="nav-link {% if current_menu is defined and current_menu is same as 'search' %}underlined{% endif %}" href="{{ path('search_index') }}"><i class="bi bi-search"></i> Rechercher</a>
+                        <a class="nav-link {% if current_menu is defined and current_menu is same as 'product_view' %}underlined{% endif %}" href="{{ path('product_index') }}"><i class="bi bi-search"></i> Rechercher</a>
                     </li>
                 </ul>
                 <ul class="navbar-nav me-auto">

@@ -1,0 +1,88 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Dépôt d'annonce - lebongroin{% endblock %}
+
+{% block body %}
+
+
+
+   <h3>Déposer une annonce</h3>
+
+   {{ form_start(productForm) }}
+
+    <div class="row mt-4">
+        <div class="col-7">
+            
+            <div style="background-color: white; padding: 30px;">
+                <h5 class="mb-4">Commençons par l'essentiel !</h5>
+                <div class="col-6">
+                    {{ form_row(productForm.title, {
+                        label: 'Quel est le titre de l\'annonce ?'
+                    }) }}
+
+                    {{ form_row(productForm.category, {
+                        label: 'Catégorie'
+                    })}}
+                </div>
+            </div>
+
+            <br>
+
+            <div style="background-color: white; padding: 30px;">
+                <h5 class="mb-4">Décrivez votre bien !</h5>
+                    {{ form_row(productForm.description, {
+                        label: 'Description de l\'annonce', 
+                        attr: {
+                            rows:10, cols:50
+                        }
+                    }) }}
+            </div>
+
+            <br>
+
+            <div style="background-color: white; padding: 30px;">
+                <h5 class="mb-4">Quel est votre prix ?</h5>
+                <div class="col-3">
+                    {{ form_row(productForm.price, {
+                        label: 'Votre prix de vente'
+                    }) }}
+                </div>
+            </div>
+
+            <br>
+
+            <div style="background-color: white; padding: 30px;">
+                <h5 class="mb-4"><i class="bi bi-geo-alt-fill"></i> Où se situe votre bien ?</h5>
+                <div class="row">
+                    <div class="col-3">
+                        {{ form_row(productForm.postalCode, {
+                            label: 'Code postal'
+                        }) }}
+                    </div>
+                    <div class="col-6">
+                        {{ form_row(productForm.city, {
+                            label: 'Ville'
+                        }) }}
+                    </div>
+                </div>
+            </div>
+
+            <br>
+
+            <div style="background-color: white; padding: 30px;">
+                <a class="btn" style="border: solid orange;">Retour</a>
+                <button type="submit" class="btn" style="margin-left: 500px; color: white; font-weight: bold; background-color: orange;">Continuer</a>
+            </div>
+        </div>
+            
+        
+        <div class="col">
+
+        </div>
+    </div>
+    
+
+   
+   {{ form_end(productForm) }}
+
+{% endblock %}
