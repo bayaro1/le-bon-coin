@@ -27,6 +27,36 @@ class AppFixtures extends Fixture
         /** @var  Generator*/
         $faker = Factory::create('fr_FR');
 
+        /**création des users */
+        $user = new User;
+        $admin = new User;
+
+        $userPassword = $this->hasher->hashPassword($user, 'jean64');
+        $adminPassword = $this->hasher->hashPassword($admin, 'admin64');
+
+        $admin->setUsername('admin')
+                ->setPassword($adminPassword)
+                ->setEmail('admin@lebongroin.fr')
+                ->setRoles(['ROLE_ADMIN'])
+                ;
+        
+        $user->setUsername('jean')
+                ->setPassword($userPassword)
+                ->setEmail('jean@gmail.com')
+                ;
+
+        $users = [];
+        for ($i=0; $i < 20; $i++) { 
+            $user = new User;
+            $user->setPassword($this->hasher->hashPassword($user, 'password'))
+                ->setUsername($faker->name())
+                ->setEmail($faker->email())
+                ;
+            $users[] = $user;
+        }
+        $manager->persist($admin);
+        $manager->persist($user);
+
         /**création des catégories */
         $categories = [];
         $category = new Category;
@@ -79,7 +109,7 @@ class AppFixtures extends Fixture
         $categories[] = $category;
 
         /**création des produits */
-        for ($i=0; $i < 500; $i++) { 
+        for ($i=0; $i < 100; $i++) { 
             $product = new Product;
             $product->setTitle($faker->sentence(3))
                     ->setDescription($faker->paragraph(5))
@@ -88,31 +118,15 @@ class AppFixtures extends Fixture
                     ->setPostalCode($faker->postcode())
                     ->setCreatedAt(new DateTimeImmutable())
                     ->setCategory($faker->randomElement($categories))
+                    ->setUser($faker->randomElement($users))
                     ;
             $manager->persist($product);
         }
 
-        /**création des users */
-        $user = new User;
-        $admin = new User;
-
-        $userPassword = $this->hasher->hashPassword($user, 'jean64');
-        $adminPassword = $this->hasher->hashPassword($admin, 'admin64');
-
-        $admin->setUsername('admin')
-                ->setPassword($adminPassword)
-                ->setEmail('admin@lebongroin.fr')
-                ->setRoles(['ROLE_ADMIN'])
-                ;
         
-        $user->setUsername('jean')
-                ->setPassword($userPassword)
-                ->setEmail('jean@gmail.com')
-                ;
-        $manager->persist($admin);
-        $manager->persist($user);
 
 
+        /**flush final */
         $manager->flush();
     }
 }
