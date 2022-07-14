@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Category;
 use Faker\Factory;
 use Faker\Generator;
 use App\Entity\Product;
@@ -26,6 +27,57 @@ class AppFixtures extends Fixture
         /** @var  Generator*/
         $faker = Factory::create('fr_FR');
 
+        /**création des catégories */
+        $categories = [];
+        $category = new Category;
+        $category->setName('Vacances');
+        $manager->persist($category);
+        $categories[] = $category;
+        $category = new Category;
+        $category->setName('Emploi');
+        $manager->persist($category);
+        $categories[] = $category;
+        $category = new Category;
+        $category->setName('Véhicules');
+        $manager->persist($category);
+        $categories[] = $category;
+        $category = new Category;
+        $category->setName('Immobilier');
+        $manager->persist($category);
+        $categories[] = $category;
+        $category = new Category;
+        $category->setName('Mode');
+        $manager->persist($category);
+        $categories[] = $category;
+        $category = new Category;
+        $category->setName('Maison');
+        $manager->persist($category);
+        $categories[] = $category;
+        $category = new Category;
+        $category->setName('Multimédia');
+        $manager->persist($category);
+        $categories[] = $category;
+        $category = new Category;
+        $category->setName('Loisirs');
+        $manager->persist($category);
+        $categories[] = $category;
+        $category = new Category;
+        $category->setName('Animaux');
+        $manager->persist($category);
+        $categories[] = $category;
+        $category = new Category;
+        $category->setName('Matériel Professionnel');
+        $manager->persist($category);
+        $categories[] = $category;
+        $category = new Category;
+        $category->setName('Services');
+        $manager->persist($category);
+        $categories[] = $category;
+        $category = new Category;
+        $category->setName('Divers');
+        $manager->persist($category);
+        $categories[] = $category;
+
         /**création des produits */
         for ($i=0; $i < 500; $i++) { 
             $product = new Product;
@@ -35,6 +87,7 @@ class AppFixtures extends Fixture
                     ->setCity($faker->city())
                     ->setPostalCode($faker->postcode())
                     ->setCreatedAt(new DateTimeImmutable())
+                    ->setCategory($faker->randomElement($categories))
                     ;
             $manager->persist($product);
         }

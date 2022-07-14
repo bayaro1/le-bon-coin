@@ -31,6 +31,10 @@ class Product
     #[ORM\Column(type: 'string', length: 255)]
     private $postalCode;
 
+    #[ORM\ManyToOne(targetEntity: Category::class, inversedBy: 'products')]
+    #[ORM\JoinColumn(nullable: false)]
+    private $category;
+
 
     public function getId(): ?int
     {
@@ -105,6 +109,18 @@ class Product
     public function setPostalCode(string $postalCode): self
     {
         $this->postalCode = $postalCode;
+
+        return $this;
+    }
+
+    public function getCategory(): ?Category
+    {
+        return $this->category;
+    }
+
+    public function setCategory(?Category $category): self
+    {
+        $this->category = $category;
 
         return $this;
     }
