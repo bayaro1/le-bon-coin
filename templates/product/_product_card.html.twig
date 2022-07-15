@@ -2,7 +2,12 @@
     <a href="" class="card mb-3" style="max-width: 700px; text-decoration: none; color: black;">
         <div class="row g-0">
             <div class="col-md-4">
-            <img src="/images/product/lorem.jpg" class="img-fluid rounded-start" style="height: 200px;" alt="...">
+            {% if product.firstPicture is not same as null %}
+
+                <img src="{{ vich_uploader_asset(product.firstPicture, 'uploadedFile') | imagine_filter('my_thumb') }} " class="img-fluid rounded-start" style="height: 200px;" alt="...">
+            
+            {% endif %}
+            
             </div>
             <div class="col-md-8">
             <div class="card-body">

@@ -2,9 +2,12 @@
 
 namespace App\Entity;
 
+use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\ProductRepository;
-use DateTimeImmutable;
+use Doctrine\Common\Collections\Collection;
+use Symfony\Component\HttpFoundation\File\File;
+use Doctrine\Common\Collections\ArrayCollection;
 
 #[ORM\HasLifecycleCallbacks]
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
@@ -40,6 +43,19 @@ class Product
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'products', cascade: ['persist'])]
     #[ORM\JoinColumn(nullable: false)]
     private $user;
+
+    #[ORM\OneToMany(mappedBy: 'product', targetEntity: Picture::class, orphanRemoval: true, cascade: ['persist'])]
+    private $pictures;
+
+    /**
+     * @var null|File[]
+     */
+    private $uploadedPictures;
+
+    public function __construct()
+    {
+        $this->pictures = new ArrayCollection();
+    }
 
     #[ORM\PrePersist]
     public function prePersist()
@@ -146,5 +162,80 @@ class Product
         $this->user = $user;
 
         return $this;
+    }
+
+    /**
+     * @return Collection<int, Picture>
+     */
+    public function getPictures(): Collection
+    {
+        return $this->pictures;
+    }
+
+    public function addPicture(Picture $picture): self
+    {
+        if (!$this->pictures->contains($picture)) {
+            $this->pictures[] = $picture;
+            $picture->setProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removePicture(Picture $picture): self
+    {
+        if ($this->pictures->removeElement($picture)) {
+            // set the owning side to null (unless already changed)
+            if ($picture->getProduct() === $this) {
+                $picture->setProduct(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * Get the value of uploadedPictures
+     *
+     * @return  null|File[]
+     */ 
+    public function getUploadedPictures()
+    {
+        return $this->uploadedPictures;
+    }
+
+    /**
+     * Set the value of uploadedPictures
+     *
+     * @param  null|File[]  $uploadedPictures
+     *
+     * @return  self
+     */ 
+    public function setUploadedPictures($uploadedPictures)
+    {
+        if($uploadedPictures !== null)
+        {
+            foreach($uploadedPictures as $uploadedPicture)
+            {
+                $picture = new Picture;
+                $picture->setUploadedFile($uploadedPicture);
+                $this->addPicture($picture);
+            }
+        }
+        
+        $this->uploadedPictures = $uploadedPictures;
+
+        return $this;
+    }
+
+    public function getFirstPicture():?Picture
+    {
+        if($this->pictures->count() === 0)
+        {
+            $picture = new Picture;
+            $picture->setFileName('lorem.jpg');
+            return $picture;
+        }
+        return $this->pictures->get(0);
     }
 }

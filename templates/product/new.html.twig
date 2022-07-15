@@ -52,6 +52,17 @@
             <br>
 
             <div style="background-color: white; padding: 30px;">
+                <h5 class="mb-4">Ajoutez jusqu'à dix photos !</h5>
+                <div class="col-3">
+                    {{ form_row(productForm.uploadedPictures, {
+                        label: 'Téléchargez vos photos'
+                    }) }}
+                </div>
+            </div>
+
+            <br>
+
+            <div style="background-color: white; padding: 30px;">
                 <h5 class="mb-4"><i class="bi bi-geo-alt-fill"></i> Où se situe votre bien ?</h5>
                 <div class="row">
                     <div class="col-3">
@@ -67,9 +78,8 @@
                 </div>
             </div>
 
-            <br>
 
-            <div style="background-color: white; padding: 30px;">
+            <div style="padding: 30px;">
                 <a class="btn" style="border: solid orange;">Retour</a>
                 <button type="submit" class="btn" style="margin-left: 500px; color: white; font-weight: bold; background-color: orange;">Continuer</a>
             </div>

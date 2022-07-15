@@ -40,6 +40,7 @@ class ProductController extends AbstractController
     #[Route('/déposer-une-annonce', name: 'product_new')]
     public function new(Request $request): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_USER');
         $product = new Product;
         $form = $this->createForm(ProductType::class, $product);
 

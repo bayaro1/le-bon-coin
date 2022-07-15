@@ -12,6 +12,7 @@ use Symfony\Component\Form\ChoiceList\ChoiceList;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\CurrencyType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 
 class ProductType extends AbstractType
 {
@@ -26,7 +27,11 @@ class ProductType extends AbstractType
             ->add('category', EntityType::class, [
                 'class' => Category::class,
                 'choice_label' => 'name'
-            ]);
+            ])
+            ->add('uploadedPictures', FileType::class, [
+                'multiple' => true,
+                'required' => false
+            ])
         ;
 
         $builder->get('price')->addModelTransformer(new PriceTransformer);
