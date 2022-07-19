@@ -1,0 +1,22 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+
+    <div style="background-color: rgba(5, 5, 5, 0.03);">
+
+        {% include "layout/_navbar.html.twig" %}
+        
+        {# barre de navigation de l'espace compte #}
+        {% include "layout/_account_nav.html.twig" %}
+        
+        <div class="container mt-4">
+
+            {% include "layout/_flashes.html.twig" %}
+            
+            {% block content %}{% endblock %}
+        </div>
+
+        {% include "layout/_footer.html.twig" %}
+    </div>
+
+{% endblock %}

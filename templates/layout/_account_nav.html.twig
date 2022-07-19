@@ -1,0 +1,28 @@
+<div class="container">
+    <ul class="nav">
+        <li class="nav-item">
+            <a class="nav-link" {% if current_submenu is defined and current_submenu is same as 'account_product' %}style="color: blue; border-bottom: solid blue;"{% else %}style="color: black;"{% endif %}
+                 href="{{ path('account_product_index') }}">Annonces</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#"{% if current_submenu is defined and current_submenu is same as 'toDo' %}style="color: blue; border-bottom: solid blue;"{% else %}style="color: black;"{% endif %}>Transactions</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#"{% if current_submenu is defined and current_submenu is same as 'toDo' %}style="color: blue; border-bottom: solid blue;"{% else %}style="color: black;"{% endif %}>Achats</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" {% if current_submenu is defined and current_submenu is same as 'account_params' %}style="color: blue; border-bottom: solid blue;"{% else %}style="color: black;"{% endif %}
+                  href="{{ path('account_params_index')}}">Paramètres</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#" {% if current_submenu is defined and current_submenu is same as 'toDo' %}style="color: blue; border-bottom: solid blue;"{% else %}style="color: black;"{% endif %}>Espace candidat</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#" {% if current_submenu is defined and current_submenu is same as 'toDo' %}style="color: blue; border-bottom: solid blue;"{% else %}style="color: black;"{% endif %}>Espace locataire</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#" {% if current_submenu is defined and current_submenu is same as 'toDo' %}style="color: blue; border-bottom: solid blue;"{% else %}style="color: black;"{% endif %}>Réservations</a>
+        </li>
+    </ul>
+
+</div>

@@ -8,6 +8,7 @@ use App\Repository\ProductRepository;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\HttpFoundation\File\File;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\HasLifecycleCallbacks]
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
@@ -47,9 +48,17 @@ class Product
     #[ORM\OneToMany(mappedBy: 'product', targetEntity: Picture::class, orphanRemoval: true, cascade: ['persist'])]
     private $pictures;
 
+
     /**
      * @var null|File[]
      */
+    #[Assert\All([
+        new Assert\Image(mimeTypes: ['image/jpeg'], mimeTypesMessage: 'format accepté : jpeg')
+    ])]
+    #[Assert\Count(
+        max: 10,
+        maxMessage: '10 photos maximum !'
+    )]
     private $uploadedPictures;
 
     public function __construct()

@@ -29,11 +29,10 @@
                     </li>
                     <li class="nav-item" style="text-align: center;">
                         {% if app.user %}
-                            <a class="nav-link" href="{{ path('security_logout') }}"><i class="bi bi-box-arrow-right"></i><br>Se déconnecter</a>
+                            <a class="nav-link" {% if current_menu is defined and current_menu is same as 'account' %}style="border-bottom: solid orange;"{% endif %} href="{{ path('account_home_index') }}"><i class="bi bi-person-fill"></i><br>{{ app.user.username }}</a>
                         {% else %}
                             <a class="nav-link {% if current_menu is defined and current_menu is same as 'login' %}underlined{% endif %}" href="{{ path('security_login') }}"><i class="bi bi-person"></i><br>Se connecter</a>
                         {% endif %}
-                        
                     </li>
                 </ul>
             </div>

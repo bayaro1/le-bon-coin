@@ -1,0 +1,23 @@
+    <a href="" class="card mb-3" style="max-width: 900px; text-decoration: none; color: black;">
+        <div class="row g-0">
+            <div class="col-4">
+            {% if product.firstPicture is not same as null %}
+
+                <img src="{{ vich_uploader_asset(product.firstPicture, 'uploadedFile') | imagine_filter('my_thumb') }} " class="img-fluid rounded-start" style="height: 200px;" alt="...">
+            
+            {% endif %}
+            
+            </div>
+            <div class="col-6">
+                <div class="card-body">
+                    <h5 class="card-title">{{ product.id }}</h5>
+                    <h5 class="card-title">{{ product.title }}</h5>
+                    <h5 class="card-title">{{ product.price | price_formater() }}</h5>
+                    <p class="card-text"><small class="text-muted">rien à signaler</small></p>
+                </div>
+            </div>
+            <div class="col-2">
+                {% include "account/product/_delete_form.html.twig" %}
+            </div>
+        </div>
+    </a>

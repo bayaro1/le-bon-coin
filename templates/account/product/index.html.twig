@@ -1,0 +1,20 @@
+{% extends "layout/account.html.twig" %}
+
+{% block content %}
+
+    <span style="padding: 10px; background-color: rgba(250, 50, 50, 0.1); color: orange;">Annonces en ligne ({{ count(products) }})</span>
+
+    <br><br>
+
+    {% if count(products) is same as 0 %}
+        <p>Vous n'avez aucune annonce en ligne</p>   
+        <a class="btn" style="background-color: blue; color: white; font-weight: bold;" href="{{ path('product_new') }}"><i class="bi bi-plus-square"></i> Déposer une annonce</a>
+                    
+    {% endif %}
+    
+
+    {% for product in products %}
+        {% include "account/product/_product_card.html.twig" %}
+    {% endfor %}
+
+{% endblock %}

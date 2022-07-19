@@ -48,14 +48,14 @@ class ProductController extends AbstractController
         
         if($form->isSubmitted() && $form->isValid()) 
         { 
-            $product->setUser($this->getUser());
             $this->em->persist($product);
             $this->em->flush();
             $this->addFlash('success', 'Votre annonce intitulée "'.$product->getTitle().'" est en ligne !');
             return $this->redirectToRoute('product_index');
         }
-        return $this->renderForm('product/new.html.twig', [
-                'productForm' => $form
+        return $this->render('product/new.html.twig', [
+                'productForm' => $form->createView(),
+                'errors' => ($form->isSubmitted() && !$form->isValid())
         ]);
     }
 

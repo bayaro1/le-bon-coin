@@ -1,12 +1,16 @@
-{% extends 'base.html.twig' %}
+{% extends "layout/default.html.twig" %}
 
 {% block title %}Dépôt d'annonce - lebongroin{% endblock %}
 
-{% block body %}
-
+{% block content %}
 
 
    <h3>Déposer une annonce</h3>
+
+   {% if errors %}
+        <div class="alert alert-danger">Le formulaire comporte des erreurs !</div>
+   {% endif %}
+   
 
    {{ form_start(productForm) }}
 
@@ -52,8 +56,8 @@
             <br>
 
             <div style="background-color: white; padding: 30px;">
-                <h5 class="mb-4">Ajoutez jusqu'à dix photos !</h5>
-                <div class="col-3">
+                <h5 class="mb-4">Ajoutez jusqu'à 10 photos !</h5>
+                <div class="col-6">
                     {{ form_row(productForm.uploadedPictures, {
                         label: 'Téléchargez vos photos'
                     }) }}

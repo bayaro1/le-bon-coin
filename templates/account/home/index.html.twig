@@ -1,0 +1,15 @@
+{% extends "layout/default.html.twig" %}
+
+
+{% block content %}
+    <h3>Partie à créer</h3>
+
+    <div>
+        <a href="{{ path('account_product_index') }}">Mes annonces</a>
+    </div>
+
+
+    <div>
+        <a href="{{ path('security_logout') }}">Se déconnecter</a>
+    </div>
+{% endblock %}
