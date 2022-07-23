@@ -43,7 +43,8 @@ class ProductController extends AbstractController
         return $this->render('product/index.html.twig', [
             'current_menu' => 'product_view',
             'paginator' => $paginator,
-            'search_filter_form' => $searchFilterForm->createView()
+            'search_filter_form' => $searchFilterForm->createView(),
+            'search_filter' => $searchFilter
         ]);
     }
 

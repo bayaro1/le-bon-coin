@@ -34,6 +34,7 @@ class ProductRepository extends ServiceEntityRepository
     public function findFilteredQuery(SearchFilter $searchFilter)
     {
         $qb = $this->createQueryBuilder('p')
+                    ->join('p.category', 'c')
                     ->orderBy('p.createdAt', 'desc')
                     ;
         
@@ -43,7 +44,18 @@ class ProductRepository extends ServiceEntityRepository
                 ->setParameter('category', $searchFilter->getCategory())
                 ;
         }
-        
+        if($searchFilter->getCity() !== null)
+        {
+            $qb->andWhere('p.city = :city')
+                ->setParameter('city', $searchFilter->getCity())
+                ;
+        }
+        if($searchFilter->getQSearch() !== null)
+        {
+            $qb->andWhere('p.title LIKE :q OR c.name LIKE :q')
+                ->setParameter('q', '%'.$searchFilter->getQSearch().'%')
+                ;
+        }
 
         return $qb->getQuery();
     }

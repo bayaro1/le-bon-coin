@@ -8,7 +8,13 @@
 
 
     
-    <h3>Annonces : </h3>
+    <h4 class="mb-4">Annonces{% if search_filter.qSearch is not null %} "{{ search_filter.qSearch }}"{% endif %} : {% if search_filter.city is not null %}{{ search_filter.city }}{% else %}Toute la France{% endif %}</h4>
+    
+
+    {% if paginator.items is empty %}
+        <p>Désolé, nous n'avons pas ça sous la main !</p>
+    {% endif %}
+    
 
     {% for product in paginator.items %}
         {% include "product/_product_card.html.twig" %}

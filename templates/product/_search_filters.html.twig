@@ -7,11 +7,12 @@
     <div class="m-2 row">
         <div class="col">
             {{ form_row(search_filter_form.category, {
-                label: 'Catégorie'
+                label: false,
+                placeholder: 'Catégorie'
             }) }}
         </div>
         <div class="col">
-            <i class="bi bi-search"></i>{{ form_row(search_filter_form.qSearch, {
+            {{ form_row(search_filter_form.qSearch, {
                 label: false,
                 attr: {
                     placeholder: 'Que recherchez-vous ?'
@@ -19,7 +20,7 @@
             }) }}
         </div>
         <div class="col">
-            <i class="bi bi-geo-alt-fill"></i>{{ form_row(search_filter_form.city, {
+            {{ form_row(search_filter_form.city, {
                 label: false, 
                 attr: {
                     placeholder: 'Saisissez une ville'
