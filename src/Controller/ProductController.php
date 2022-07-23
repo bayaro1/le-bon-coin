@@ -3,7 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\Product;
+use App\Entity\SearchFilter;
 use App\Form\ProductType;
+use App\Form\SearchFilterType;
 use App\Repository\ProductRepository;
 use App\Services\Paginator;
 use Knp\Component\Pager\PaginatorInterface;
@@ -31,9 +33,13 @@ class ProductController extends AbstractController
     public function index(Paginator $paginator, Request $request): Response
     {
         $paginator->configure($request, $this->repository->findAllQuery(), 5);
+
+        $searchFilter = new SearchFilter;
+        $searchFilterForm = $this->createForm(SearchFilterType::class, $searchFilter);
         return $this->render('product/index.html.twig', [
             'current_menu' => 'product_view',
-            'paginator' => $paginator
+            'paginator' => $paginator,
+            'search_filter_form' => $searchFilterForm->createView()
         ]);
     }
 
