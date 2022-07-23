@@ -14,6 +14,7 @@ class SearchFilterType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
+            ->setMethod('GET')
             ->add('qSearch')
             ->add('city')
             ->add('category', EntityType::class, [

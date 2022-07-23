@@ -32,10 +32,14 @@ class ProductController extends AbstractController
     #[Route('/annonces', name: 'product_index')]
     public function index(Paginator $paginator, Request $request): Response
     {
-        $paginator->configure($request, $this->repository->findAllQuery(), 5);
 
         $searchFilter = new SearchFilter;
         $searchFilterForm = $this->createForm(SearchFilterType::class, $searchFilter);
+
+        $searchFilterForm->handleRequest($request);
+
+        $paginator->configure($request, $this->repository->findFilteredQuery($searchFilter), 5);
+
         return $this->render('product/index.html.twig', [
             'current_menu' => 'product_view',
             'paginator' => $paginator,

@@ -4,6 +4,7 @@ namespace App\Services;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Query;
 use Symfony\Component\HttpClient\Exception\RedirectionException;
+use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -26,6 +27,8 @@ class Paginator
 
     private string $route;
 
+    private ParameterBag $query;
+
     public function __construct(UrlGeneratorInterface $urlGenerator)
     {
         $this->urlGenerator = $urlGenerator;
@@ -35,16 +38,19 @@ class Paginator
     public function configure(Request $request, Query $query, ?int $perPage = self::PER_PAGE):void
     {
         $this->route = $request->attributes->get('_route');
+        $this->query = $request->query;
         if($request->query->getInt(self::PAGE_NAME) === 1)
         {
-            $response = new RedirectResponse($this->urlGenerator->generate($this->route));
+            $this->query->set(self::PAGE_NAME, null);
+            $response = new RedirectResponse($this->urlGenerator->generate($this->route, iterator_to_array($this->query)));
             $response->send();
         }
 
         $this->page = $request->query->getInt(self::PAGE_NAME, 1);
         if($this->page < 1)
         {
-            $response = new RedirectResponse($this->urlGenerator->generate($this->route));
+            $this->query->set(self::PAGE_NAME, null);
+            $response = new RedirectResponse($this->urlGenerator->generate($this->route, iterator_to_array($this->query)));
             $response->send();
         }
 
@@ -88,7 +94,7 @@ class Paginator
         }
         
         $numbers_html = [];
-        for ($i=$first; $i <= $last; $i++) { 
+        for ($i=$first; $i < $last; $i++) { 
             $url = $this->urlGenerator->generate($this->route, [self::PAGE_NAME => $i]);
             $style = $i === $this->page ? 'style="background-color: black; color: white;"': '';
             $numbers_html[] = '<a class="btn" '.$style.' href="'.$url.'">'.$i.'</a>';
@@ -101,7 +107,8 @@ class Paginator
     {
         if($this->page > 1)
         {
-            $previousUrl = $this->urlGenerator->generate($this->route, [self::PAGE_NAME => $this->page - 1]);
+            $this->query->set(self::PAGE_NAME, $this->page - 1);
+            $previousUrl = $this->urlGenerator->generate($this->route, iterator_to_array($this->query));
             return <<<HTML
                         <a href="$previousUrl" style="color: black;" class="btn me-2"><i class="bi bi-chevron-left"></i></a>
                         HTML;
@@ -118,7 +125,8 @@ class Paginator
     {
         if($this->page < $this->totalPages)
         {
-            $nextUrl = $this->urlGenerator->generate($this->route, [self::PAGE_NAME => $this->page + 1]);
+            $this->query->set(self::PAGE_NAME, $this->page + 1);
+            $nextUrl = $this->urlGenerator->generate($this->route, iterator_to_array($this->query));
             return <<<HTML
                         <a href="$nextUrl" style="color: black;" class="btn ms-2"><i class="bi bi-chevron-right" ></i></a>
                         HTML;

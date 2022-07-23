@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Product;
+use App\Entity\SearchFilter;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Knp\Component\Pager\PaginatorInterface;
@@ -28,6 +29,23 @@ class ProductRepository extends ServiceEntityRepository
                     ->orderBy('p.createdAt', 'desc')
                     ->getQuery()
                     ;
+    }
+
+    public function findFilteredQuery(SearchFilter $searchFilter)
+    {
+        $qb = $this->createQueryBuilder('p')
+                    ->orderBy('p.createdAt', 'desc')
+                    ;
+        
+        if($searchFilter->getCategory() !== null)
+        {
+            $qb->andWhere('p.category = :category')
+                ->setParameter('category', $searchFilter->getCategory())
+                ;
+        }
+        
+
+        return $qb->getQuery();
     }
 
     
