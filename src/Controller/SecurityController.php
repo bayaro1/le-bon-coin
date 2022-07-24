@@ -6,6 +6,7 @@ use App\Entity\User;
 
 
 use App\Form\RegistrationFormType;
+use App\Service\CartService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,6 +17,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class SecurityController extends AbstractController
 {
+
     #[Route('/connexion', name: 'security_login')]
     public function login(AuthenticationUtils $authenticationUtils): Response
     {

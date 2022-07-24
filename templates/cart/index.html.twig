@@ -1,0 +1,18 @@
+{% extends "layout/default.html.twig" %}
+
+
+{% block content %}
+    
+    {% if count(products) > 0 %}
+        {% for product in products %}
+            {% include "product/_product_card.html.twig" %}
+        {% endfor %}
+    
+    {% else %}
+        <h5 class="text-center">Vous n’avez pas encore d’annonce sauvegardée</h5>
+    {% endif %}
+    
+
+    
+
+{% endblock %}

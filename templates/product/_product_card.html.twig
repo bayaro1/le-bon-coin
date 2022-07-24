@@ -9,13 +9,19 @@
             {% endif %}
             
             </div>
-            <div class="col-md-8">
-            <div class="card-body">
-                <h5 class="card-title">{{ product.title }}</h5>
-                <h5 class="card-title">{{ product.price | price_formater() }}</h5>
-                <p class="card-text"><small class="text-muted">{{ product.category.name}}</small></p>
-                <p class="card-text"><small class="text-muted"><i class="bi bi-geo-alt-fill"></i> {{ product.city}}</small></p>
+            <div class="col-md-7">
+                <div class="card-body">
+                    <h5 class="card-title">{{ product.title }}</h5>
+                    <h5 class="card-title">{{ product.price | price_formater() }}</h5>
+                    <p class="card-text"><small class="text-muted">{{ product.category.name}}</small></p>
+                    <p class="card-text"><small class="text-muted"><i class="bi bi-geo-alt-fill"></i> {{ product.city}}</small></p>
+                </div>
             </div>
+            <div class="col align-self-end">
+                <form action="{{ path('cart_add', {'id': product.id}) }}" method="post">
+                    <button class="btn" name="url" value="{{ app.request.requesturi }}"><i {% if cart_service.exists(product.id) %}style="font-size: 1.3em; color: orange;" class="bi bi-heart-fill"{% else %}style="font-size: 1.3em; color: grey;" class="bi bi-heart" {% endif %}></i></button>
+                </form>
             </div>
         </div>
     </a>
+    

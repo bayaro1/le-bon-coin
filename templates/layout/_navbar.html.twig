@@ -21,7 +21,7 @@
                         <a class="nav-link" href="#"><i class="bi bi-bell"></i><br>Mes recherches</a>
                     </li>
                     <li class="nav-item" style="text-align: center;">
-                        <a class="nav-link" href="#"> <i class="bi bi-heart"></i><br>Favoris</a>
+                        <a class="nav-link" {% if current_menu is defined and current_menu is same as 'cart' %}style="border-bottom: solid orange;"{% endif %} href="{{ path('cart_index') }}"> <i class="bi bi-heart"></i><br>Favoris</a>
                     </li>
                     <li class="nav-item" style="text-align: center;">
                         
