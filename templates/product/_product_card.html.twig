@@ -1,5 +1,5 @@
 
-    <a href="" class="card mb-3" style="max-width: 700px; text-decoration: none; color: black;">
+    <a href="{{ path('product_show', {'category': product.category.name, 'product_id': product.id}) }}" class="card mb-3" style="max-width: 700px; text-decoration: none; color: black;">
         <div class="row g-0">
             <div class="col-md-4">
             {% if product.firstPicture is not same as null %}

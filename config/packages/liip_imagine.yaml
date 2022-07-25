@@ -24,3 +24,10 @@ liip_imagine:
                 # to crop the image when the size ratio of the input differs
                 thumbnail  : { size : [120, 90], mode : outbound }
                 
+        my_first : 
+
+            quality : 75
+
+            filters :
+
+                thumbnail : { size : [720, 360], mode : outbound }

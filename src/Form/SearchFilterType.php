@@ -14,12 +14,12 @@ class SearchFilterType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->setMethod('GET')
             ->add('qSearch')
             ->add('city')
             ->add('category', EntityType::class, [
                 'class' => Category::class,
-                'choice_label' => 'name', 
+                'choice_label' => 'name',
+                'choice_value' => 'name', 
                 'required' => false
             ])
         ;
@@ -29,6 +29,12 @@ class SearchFilterType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => SearchFilter::class,
+            'method' => 'GET',
+            'csrf_protection' => false
         ]);
+    }
+    public function getBlockPrefix()
+    {
+        return '';
     }
 }

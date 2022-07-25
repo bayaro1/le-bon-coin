@@ -3,18 +3,20 @@
 namespace App\Controller;
 
 use App\Entity\Product;
-use App\Entity\SearchFilter;
 use App\Form\ProductType;
+use App\Service\Paginator;
+use App\Entity\SearchFilter;
 use App\Form\SearchFilterType;
+use Doctrine\ORM\Mapping\Entity;
 use App\Repository\ProductRepository;
-use App\Services\Paginator;
+use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use ContainerZMcLRYO\PaginatorInterface_82dac15;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 class ProductController extends AbstractController
 {
@@ -44,6 +46,15 @@ class ProductController extends AbstractController
             'paginator' => $paginator,
             'search_filter_form' => $searchFilterForm->createView(),
             'search_filter' => $searchFilter
+        ]);
+    }
+
+    #[Route('/{category}/{product_id}', name: 'product_show')]
+    #[ParamConverter('product', options: ['mapping' => ['product_id' => 'id']])]
+    public function show(Product $product)
+    {
+        return $this->render('product/show.html.twig', [
+            'product' => $product
         ]);
     }
 

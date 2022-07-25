@@ -1,0 +1,37 @@
+{% extends "layout/default.html.twig" %}
+
+{% block title %}Dépôt d'annonce - lebongroin{% endblock %}
+
+{% block content %}
+
+    
+    {# fil d'ariane #}
+    <p><a href="{{ path('home_index') }}">Accueil</a>
+        > 
+        <a href="{{ path('product_index', {'category': product.category.name}) }}">{{ product.category.name }}</a>
+        > 
+        <a href="{{path('product_index', {'city': product.city}) }}">{{ product.city }}</a>
+        > {{ product.title }}
+    </p>
+
+
+    <div class="row">
+        <div class="col-7">
+            {# photo à la une #}
+            <img src=" {{ vich_uploader_asset(product.firstPicture, 'uploadedFile') | imagine_filter('my_first') }}">
+            <h4>{{ product.title }}</h4>
+            <p style="font-size: 1.5em; color: orange; font-weight: bold;">{{ product.price | price_formater }}</p>
+            <p>{{ product.createdAt | date_formater }}</p>
+            <hr>
+            <h5>Description</h5>
+            <p>{{ product.description }}</p>
+        </div>
+        <div class="col">
+            {# card user #}
+            {{ product.user.username }}
+        </div>
+    </div>
+
+
+
+{% endblock %}
