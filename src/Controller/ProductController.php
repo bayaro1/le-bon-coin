@@ -32,7 +32,6 @@ class ProductController extends AbstractController
     #[Route('/annonces', name: 'product_index')]
     public function index(Paginator $paginator, Request $request): Response
     {
-
         $searchFilter = new SearchFilter;
         $searchFilterForm = $this->createForm(SearchFilterType::class, $searchFilter);
 

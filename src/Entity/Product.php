@@ -61,9 +61,13 @@ class Product
     )]
     private $uploadedPictures;
 
+    #[ORM\ManyToMany(targetEntity: Cart::class, mappedBy: 'products')]
+    private $carts;
+
     public function __construct()
     {
         $this->pictures = new ArrayCollection();
+        $this->carts = new ArrayCollection();
     }
 
     #[ORM\PrePersist]
@@ -246,5 +250,32 @@ class Product
             return $picture;
         }
         return $this->pictures->get(0);
+    }
+
+    /**
+     * @return Collection<int, Cart>
+     */
+    public function getCarts(): Collection
+    {
+        return $this->carts;
+    }
+
+    public function addCart(Cart $cart): self
+    {
+        if (!$this->carts->contains($cart)) {
+            $this->carts[] = $cart;
+            $cart->addProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCart(Cart $cart): self
+    {
+        if ($this->carts->removeElement($cart)) {
+            $cart->removeProduct($this);
+        }
+
+        return $this;
     }
 }
