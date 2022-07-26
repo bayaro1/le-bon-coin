@@ -25,7 +25,7 @@
                     </li>
                     <li class="nav-item" style="text-align: center;">
                         
-                        <a class="nav-link" href="#"><i class="bi bi-chat-right-text"></i><br>Messages</a>
+                        <a class="nav-link" {% if current_menu is defined and current_menu is same as 'message' %}style="border-bottom: solid orange;"{% endif %} href="{{ path('message_index') }}"><i class="bi bi-chat-right-text"></i><br>Messages</a>
                     </li>
                     <li class="nav-item" style="text-align: center;">
                         {% if app.user %}
