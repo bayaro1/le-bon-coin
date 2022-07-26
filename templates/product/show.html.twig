@@ -28,24 +28,9 @@
             <hr>
             <p><i class="bi bi-geo-alt-fill"></i><span style="font-size: 1.1em; font-weight: bold;"> {{ product.city }}</span> ({{ product.postalCode }})</p>
             <hr>
-            {% set count = count(product.user.products) %}
 
-            <div class="row">
-                <div class="col-1">
-                    <i style="font-size: 3.7em; color: grey;" class="bi bi-person-circle"></i>
-                </div>
-                <div class="col ms-2">
-                    <span style="font-size: 1.1em; font-weight: bold;"> {{ product.user.username }}</span>
-                    <br>
-                    {{ count }} annonce{% if count > 1 %}s{% endif %}
-                    <br>
-                    <i class="bi bi-star-fill" style="color: orange; font-size: 0.9em;"></i>
-                    <i class="bi bi-star-fill" style="color: orange; font-size: 0.9em;"></i>
-                    <i class="bi bi-star-fill" style="color: orange; font-size: 0.9em;"></i>
-                    <i class="bi bi-star-fill" style="color: orange; font-size: 0.9em;"></i>
-                    <i class="bi bi-star-fill" style="color: orange; font-size: 0.9em;"></i>
-                    <span style="font-size: 0.9em; font-weight: bold;">(à faire)</span>
-                </div>
+            <div class="col-4">
+                {% include "user/_user_card.html.twig" %}
             </div>
             <p style="font-size: 0.9em;"><i class="bi bi-person"></i> Membre depuis ...
                 <br>
@@ -55,30 +40,14 @@
         <div class="col">
             {# card user #}
             <div style="border-color: white; border-style: solid; border-width: 1px; border-radius: 3px; box-shadow: 5px 2px 10px 3px grey; width: 300px; padding: 10px;">
-                <div class="row">
-                    <div class="col-3">
-                        <i style="font-size: 3.7em; color: grey;" class="bi bi-person-circle"></i>
-                    </div>
-                    <div class="col">
-                        <span style="font-size: 1.1em; font-weight: bold;"> {{ product.user.username }}</span>
-                        <br>
-                        {{ count }} annonce{% if count > 1 %}s{% endif %}
-                        <br>
-                        <i class="bi bi-star-fill" style="color: orange; font-size: 0.9em;"></i>
-                        <i class="bi bi-star-fill" style="color: orange; font-size: 0.9em;"></i>
-                        <i class="bi bi-star-fill" style="color: orange; font-size: 0.9em;"></i>
-                        <i class="bi bi-star-fill" style="color: orange; font-size: 0.9em;"></i>
-                        <i class="bi bi-star-fill" style="color: orange; font-size: 0.9em;"></i>
-                        <span style="font-size: 0.9em; font-weight: bold;">(à faire)</span>
-                    </div>
-                </div>
+                {% include "user/_user_card.html.twig" %}
                 
                 <hr>
 
                 <p style="font-size: 0.9em;"><i class="bi bi-clock"></i> Dernière réponse en moins de ...</p>
                 <div class="d-grid gap-2">
-                    <button style="background-color: orange; color: white; font-weight: bold;" class="btn" type="button">Acheter</button>
-                    <button style="font-weight: bold;" class="btn btn-primary" type="button">Message</button>
+                    <a style="background-color: orange; color: white; font-weight: bold;" class="btn" type="button">Acheter</a>
+                    <a href="{{ path('message_new', {'product_id': product.id})}} " style="font-weight: bold;" class="btn btn-primary" type="button">Message</a>
                 </div>
             </div>
         </div>

@@ -1,0 +1,18 @@
+<div class="row">
+    <div class="col-3">
+        <i style="font-size: 3.7em; color: grey;" class="bi bi-person-circle"></i>
+    </div>
+    <div class="col">
+        <span style="font-size: 1.1em; font-weight: bold;"> {{ product.user.username }}</span>
+        <br>
+        {% set count = count(user.products) %}
+        {{ count }} annonce{% if count > 1 %}s{% endif %}
+        <br>
+        <i class="bi bi-star-fill" style="color: orange; font-size: 0.9em;"></i>
+        <i class="bi bi-star-fill" style="color: orange; font-size: 0.9em;"></i>
+        <i class="bi bi-star-fill" style="color: orange; font-size: 0.9em;"></i>
+        <i class="bi bi-star-fill" style="color: orange; font-size: 0.9em;"></i>
+        <i class="bi bi-star-fill" style="color: orange; font-size: 0.9em;"></i>
+        <span style="font-size: 0.9em; font-weight: bold;">(à faire)</span>
+    </div>
+</div>

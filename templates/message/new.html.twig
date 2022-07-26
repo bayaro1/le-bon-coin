@@ -1,0 +1,50 @@
+{% extends "layout/default.html.twig" %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-5">
+            
+            <div style="border-color: white; border-style: solid; border-width: 1px; border-radius: 3px; box-shadow: 5px 2px 10px 3px grey; padding: 20px;">
+                <div class="col-6">
+                    {% include "user/_user_card.html.twig" %}
+                </div>
+            </div>
+            <div class="mt-4" style="border-color: white; border-style: solid; border-width: 1px; border-radius: 3px; box-shadow: 5px 2px 10px 3px grey; padding: 20px;">
+                <h5>Envoyer un message à {{ user.username }}</h5>
+
+                <form class="form mt-4" action="{{ path('message_new', {'product_id': product.id}) }}" method="POST">
+                    <div class="form-group">
+                        <label class="form-label" for="message">Votre message</label>
+                        <textarea class="form-control" id="message" cols="50" rows="8" name="message">Bonjour, cette annonce est-elle toujours disponible ?</textarea>
+                    </div>
+                    <div class="d-grid gap-2 mt-4">
+                        <button type="submit" class="btn btn-primary">Envoyer</button>
+                    </div>
+                </form>
+
+                <p class="mt-4" style="font-size: 0.8em;">Me renseigner sur les finalités du traitement de mes données personnelles, les destinataires, le responsable de traitement, les durées de conservation, les coordonnées du DPO et mes droits.</p>
+            </div>
+
+        </div>
+        <div class="col-5">
+
+            <div style="border-color: white; border-style: solid; border-width: 1px; border-radius: 3px; box-shadow: 5px 2px 10px 3px grey; padding: 20px;">
+                <div class="col-6">
+                    <h5>Résumé de l'annonce</h5>
+                    <br><br>
+                    <h5>{{ product.title}}</h5>
+                    <h5>{{ product.price | price_formater }}</h5>
+                    <p style="color: grey;">{{ product.createdAt | date_formater }}</p>
+                    <p>par <strong>{{ user.username }}</strong></p>
+                    <hr>
+                    <h5>Description</h5>
+                    <p>{{ product.description }}</p>
+                    <hr>
+                    <h5>Localisation</h5>
+                    <p>{{ product.city }} {{ product.postalCode }}</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+{% endblock %}
