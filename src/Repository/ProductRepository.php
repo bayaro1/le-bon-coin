@@ -23,10 +23,10 @@ class ProductRepository extends ServiceEntityRepository
         parent::__construct($registry, Product::class);
     }
 
-    public function findAllQuery()
+    public function countAllQuery()
     {
         return $this->createQueryBuilder('p')
-                    ->orderBy('p.createdAt', 'desc')
+                    ->select('p.id')
                     ->getQuery()
                     ;
     }
@@ -34,7 +34,9 @@ class ProductRepository extends ServiceEntityRepository
     public function findFilteredQuery(SearchFilter $searchFilter)
     {
         $qb = $this->createQueryBuilder('p')
+                    ->select('p', 'c', 'pics')
                     ->join('p.category', 'c')
+                    ->leftJoin('p.pictures', 'pics')
                     ->orderBy('p.createdAt', 'desc')
                     ;
         

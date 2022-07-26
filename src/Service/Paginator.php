@@ -35,7 +35,7 @@ class Paginator
     }
 
 
-    public function configure(Request $request, Query $query, ?int $perPage = self::PER_PAGE):void
+    public function configure(Request $request, Query $countQuery, Query $selectQuery, ?int $perPage = self::PER_PAGE):void
     {
         $this->route = $request->attributes->get('_route');
         $this->query = $request->query;
@@ -55,9 +55,9 @@ class Paginator
         }
 
         $offset = $perPage * ($this->page - 1);
-        $this->totalItems = count($query->getResult());
+        $this->totalItems = count($countQuery->getResult());
         $this->totalPages = round($this->totalItems / $perPage);
-        $this->items = $query->setMaxResults($perPage)
+        $this->items = $selectQuery->setMaxResults($perPage)
                                 ->setFirstResult($offset)
                                 ->getResult();
 

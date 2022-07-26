@@ -13,8 +13,11 @@
                 <div class="card-body">
                     <h5 class="card-title">{{ product.title }}</h5>
                     <h5 class="card-title">{{ product.price | price_formater() }}</h5>
-                    <p class="card-text"><small class="text-muted">{{ product.category.name}}</small></p>
-                    <p class="card-text"><small class="text-muted"><i class="bi bi-geo-alt-fill"></i> {{ product.city}}</small></p>
+                    <p class="card-text mt-4">
+                            <small class="text-muted">{{ product.category.name}}</small><br>
+                            <small class="text-muted">{{ product.city}} {{ product.postalCode }}</small><br>
+                            <small class="text-muted">{{ product.createdAt | date_formater }}</small>
+                    </p>
                 </div>
             </div>
             <div class="col align-self-end">
