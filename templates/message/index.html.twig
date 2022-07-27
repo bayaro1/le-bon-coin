@@ -2,8 +2,72 @@
 
 {% block content %}
     
-    <pre>
-        {{ dump(conversations) }}
-    </pre>
+    <div class="row">
+    
+        <div class="col-6">
+            <table class="table">
+                <tbody>
+                    {% for conversation in conversations %}
+                            <tr>
+                            
+                                <td>{{ conversation.interlocutor.username }}</td>
+                                <td>
+                        <a href="{{ path('message_index', {'conversation_id': conversation.id}) }}"> {{ conversation.lastMessageContent }} 
+                        </a></td>
+                                <td>{{ conversation.updatedAt | date_formater }}</td>
+                                
+                            <tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        {% if selected_conversation %}
+
+        
+        <div class="col" style="background-color: rgba(255,165,0, 0.1);">
+                <div class="row" style="background-color: orange; color: white;">
+                    <div class="col-1">
+                        <a href="{{ path('message_index') }}"><i class="bi bi-arrow-left" style="font-size: 3em; color: white;"></i></a>
+                    </div>
+                    <div class="col-5">
+                        {% set user = selected_conversation.interlocutor %}
+                        {% include "user/_user_card.html.twig" %}
+                    </div>
+                </div>
+
+                {% for message in selected_conversation.messages %}
+                    {% if message.sender is same as selected_conversation.user %}
+                        {% include "message/_user_bubble.html.twig" %}
+                    {% else %}
+                        {% include "message/_interlocutor_bubble.html.twig" %}
+                    {% endif %}
+                {% endfor %}
+
+                <div class="m-4" style="text-align: end;">
+                    {{ form_start(form) }}
+
+                    <div class="row">
+                        <div class="col-10">
+                            {{ form_row(form.content, {
+                                'label': false,
+                                'attr': {
+                                    'placeholder': 'Message'
+                                }
+                            }) }}
+                        </div>
+                        <div class="col">
+                            <button class="btn" style="background-color: orange; display: inline-block; width: 100%;"><i class="bi bi-send-fill"></i></button>
+                        </div>
+                    </div>
+
+                    {{ form_end(form) }}
+                </div>
+        </div>
+
+        {% endif %}
+    </div>
+
+    
 
 {% endblock %}

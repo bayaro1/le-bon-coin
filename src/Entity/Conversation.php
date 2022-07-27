@@ -18,6 +18,9 @@ class Conversation
 
     #[ORM\OneToMany(mappedBy: 'conversation', targetEntity: Message::class, cascade: ['persist'])]
     private $messages;
+    
+    #[ORM\Column(type: 'text')]
+    private $lastMessageContent;
 
     #[ORM\Column(type: 'datetime_immutable')]
     private $updatedAt;
@@ -29,6 +32,7 @@ class Conversation
     #[ORM\ManyToOne(targetEntity: User::class)]
     #[ORM\JoinColumn(nullable: true)]
     private $interlocutor;
+
 
     public function __construct()
     {
@@ -53,6 +57,7 @@ class Conversation
     {
         if (!$this->messages->contains($message)) {
             $this->messages[] = $message;
+            $this->lastMessageContent = $message->getContent();
             $message->setConversation($this);
         }
 
@@ -104,6 +109,27 @@ class Conversation
     public function setInterlocutor(?User $interlocutor): self
     {
         $this->interlocutor = $interlocutor;
+
+        return $this;
+    }
+
+
+    /**
+     * Get the value of lastMessageContent
+     */ 
+    public function getLastMessageContent()
+    {
+        return $this->lastMessageContent;
+    }
+
+    /**
+     * Set the value of lastMessageContent
+     *
+     * @return  self
+     */ 
+    public function setLastMessageContent($lastMessageContent)
+    {
+        $this->lastMessageContent = $lastMessageContent;
 
         return $this;
     }

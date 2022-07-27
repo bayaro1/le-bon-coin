@@ -3,7 +3,7 @@
         <i style="font-size: 3.7em; color: grey;" class="bi bi-person-circle"></i>
     </div>
     <div class="col">
-        <span style="font-size: 1.1em; font-weight: bold;"> {{ product.user.username }}</span>
+        <span style="font-size: 1.1em; font-weight: bold;"> {{ user.username }}</span>
         <br>
         {% set count = count(user.products) %}
         {{ count }} annonce{% if count > 1 %}s{% endif %}

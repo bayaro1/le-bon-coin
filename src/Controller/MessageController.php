@@ -1,6 +1,7 @@
 <?php 
 namespace App\Controller;
 
+use App\Entity\Conversation;
 use DateTimeImmutable;
 use App\Entity\Message;
 use App\Entity\Product;
@@ -14,6 +15,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 class MessageController extends AbstractController
 {
@@ -59,13 +61,34 @@ class MessageController extends AbstractController
         ]);
     }
 
-    #[Route('/messages', name: 'message_index')]
+    #[Route('/messages/{conversation_id?0}', name: 'message_index')]
     #[IsGranted('ROLE_USER')]
-    public function index()
-    {
+    #[ParamConverter('selectedConversation', options: ['mapping' => ['conversation_id' => 'id']])]
+    public function index(?Conversation $selectedConversation, Request $request)
+    { 
+        $message = new Message;
+        if($selectedConversation)
+        {
+            $form = $this->createForm(MessageType::class, $message);
+            $form->handleRequest($request);
+
+            if($form->isSubmitted() && $form->isValid()) 
+            { 
+                $message->setSender($this->getUser())
+                        ->setReceiver($selectedConversation->getInterlocutor())
+                        ;
+                $this->messagePersister->persist($message);
+            }
+        }
+
+        $form = $this->createForm(MessageType::class, null, [
+            'fieldType' => TextType::class
+        ]);
         return $this->render('message/index.html.twig', [
             'current_menu' => 'message',
-            'conversations' => $this->conversationRepository->findByUser($this->getUser())
+            'conversations' => $this->conversationRepository->findByUser($this->getUser()),
+            'selected_conversation' => $selectedConversation,
+            'form' => $form->createView()
         ]);
     }
 }
