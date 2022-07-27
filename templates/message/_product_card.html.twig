@@ -1,0 +1,27 @@
+
+    <a href="{{ path('product_show', {'category': product.category.name, 'product_id': product.id}) }}" class="card mb-3" style="text-decoration: none; color: black;">
+        <div class="row g-0">
+            <div class="col-md-2">
+            {% if product.firstPicture is not same as null %}
+
+                <img src="{{ vich_uploader_asset(product.firstPicture, 'uploadedFile') | imagine_filter('my_thumb') }}" style="height: 100%;" class="img-fluid rounded-start" alt="...">
+            
+            {% endif %}
+            
+            </div>
+            <div class="col-md-5">
+                <div class="card-body">
+                    <h5 class="card-title">{{ product.title }}</h5>
+                    <h5 class="card-title">{{ product.price | price_formater() }}</h5>
+                </div>
+            </div>
+            <div class="col">
+                <p class="card-text mt-2">
+                            <small class="text-muted">{{ product.category.name}}</small><br>
+                            <small class="text-muted">{{ product.city}} {{ product.postalCode }}</small><br>
+                            <small class="text-muted">{{ product.createdAt | date_formater }}</small>
+                </p>
+            </div>
+        </div>
+    </a>
+    

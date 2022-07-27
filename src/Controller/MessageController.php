@@ -37,6 +37,14 @@ class MessageController extends AbstractController
     #[IsGranted('ROLE_USER')]
     public function new(Product $product, Request $request)
     {
+        if($product->getUser() === $this->getUser())
+        {
+            return $this->redirectToRoute('product_show', [
+                'product_id' => $product->getId(),
+                'category' => $product->getCategory()->getName() 
+            ]);
+        }
+
         $message = new Message;
         $form = $this->createForm(MessageType::class, $message);
         $form->handleRequest($request);
@@ -45,6 +53,7 @@ class MessageController extends AbstractController
         { 
             $message->setSender($this->getUser())
                     ->setReceiver($product->getUser())
+                    ->setProduct($product)
                     ;
             $this->messagePersister->persist($message);
             $this->addFlash('success', 'Votre message a bien été envoyé !');
@@ -76,6 +85,7 @@ class MessageController extends AbstractController
             { 
                 $message->setSender($this->getUser())
                         ->setReceiver($selectedConversation->getInterlocutor())
+                        ->setProduct($selectedConversation->getProduct())
                         ;
                 $this->messagePersister->persist($message);
             }
@@ -86,7 +96,7 @@ class MessageController extends AbstractController
         ]);
         return $this->render('message/index.html.twig', [
             'current_menu' => 'message',
-            'conversations' => $this->conversationRepository->findByUser($this->getUser()),
+            'conversations' => $this->conversationRepository->findAllByUser($this->getUser()),
             'selected_conversation' => $selectedConversation,
             'form' => $form->createView()
         ]);

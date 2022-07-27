@@ -9,6 +9,8 @@ use Doctrine\Bundle\DoctrineBundle\EventSubscriber\EventSubscriberInterface;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Events;
 
+use function PHPUnit\Framework\throwException;
+
 class MessagePersister
 {
     private ConversationRepository $conversationRepository;
@@ -20,8 +22,12 @@ class MessagePersister
 
     public function persist(Message $message)
     {
+        if($message->getSender() === $message->getReceiver())
+        {
+            throw new \Exception("Vous ne pouvez pas vous envoyer un message à vous même", 1);
+        }
         $message->setSentAt(new DateTimeImmutable());
-        
+
         $this->conversationRepository->add($this->senderSideConversation($message));
         $this->conversationRepository->add($this->receiverSideConversation($this->copyMessage($message)), true);  //copyMessage permet que deux messages différents soient enregistrés, un pour chaque conversation.
     }
@@ -33,12 +39,13 @@ class MessagePersister
                 ->setReceiver($message->getReceiver())
                 ->setContent($message->getContent())
                 ->setSentAt($message->getSentAt())
+                ->setProduct($message->getProduct())
                 ;
     }
 
     private function senderSideConversation(Message $message)
     {
-        $conversation = $this->conversationRepository->findByUserAndInterlocutor($message->getSender(), $message->getReceiver());
+        $conversation = $this->conversationRepository->findOneOrNull($message->getSender(), $message->getReceiver(), $message->getProduct());
         if($conversation)
         {
             $conversation->addMessage($message)
@@ -52,6 +59,7 @@ class MessagePersister
                             ->setInterlocutor($message->getReceiver())
                             ->addMessage($message)
                             ->setUpdatedAt(new DateTimeImmutable())
+                            ->setProduct($message->getProduct())
                             ;
         }
         return $conversation;
@@ -59,7 +67,7 @@ class MessagePersister
 
     public function receiverSideConversation(Message $message)
     {
-         $conversation = $this->conversationRepository->findByUserAndInterlocutor($message->getReceiver(), $message->getSender());
+         $conversation = $this->conversationRepository->findOneOrNull($message->getReceiver(), $message->getSender(), $message->getProduct());
          if($conversation)
          {
              $conversation->addMessage($message)
@@ -73,6 +81,7 @@ class MessagePersister
                          ->setInterlocutor($message->getSender())
                          ->addMessage($message)
                          ->setUpdatedAt(new DateTimeImmutable())
+                         ->setProduct($message->getProduct())
                          ;
          }
          return $conversation;

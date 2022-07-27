@@ -31,3 +31,11 @@ liip_imagine:
             filters :
 
                 thumbnail : { size : [720, 360], mode : outbound }
+        
+        my_mini : 
+
+            quality : 75
+
+            filters :
+
+                thumbnail : { size : [60, 45], mode : outbound }

@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Conversation;
+use App\Entity\Product;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -27,18 +28,19 @@ class ConversationRepository extends ServiceEntityRepository
      * @param User $interlocutor
      * @return Conversation|null
      */
-    public function findByUserAndInterlocutor(User $user, User $interlocutor)
+    public function findOneOrNull(User $user, User $interlocutor, Product $product)
     {
         return $this->createQueryBuilder('c')
-                    ->where('c.user = :user AND c.interlocutor = :interlocutor')
+                    ->where('c.user = :user AND c.interlocutor = :interlocutor AND c.product = :product')
                     ->setParameter('user', $user)
                     ->setParameter('interlocutor', $interlocutor)
+                    ->setParameter('product', $product)
                     ->getQuery()
                     ->getOneOrNullResult()
                     ;
     }
 
-    public function findByUser(User $user)
+    public function findAllByUser(User $user)
     {
         return $this->createQueryBuilder('c')
                     ->select('c', 'm')

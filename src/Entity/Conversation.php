@@ -33,6 +33,10 @@ class Conversation
     #[ORM\JoinColumn(nullable: true)]
     private $interlocutor;
 
+    #[ORM\ManyToOne(targetEntity: Product::class)]
+    #[ORM\JoinColumn(nullable: false)]
+    private $product;
+
 
     public function __construct()
     {
@@ -122,6 +126,11 @@ class Conversation
         return $this->lastMessageContent;
     }
 
+    public function getLastMessageExcerpt()
+    {
+        return substr($this->lastMessageContent, 0, 20).'...';
+    }
+
     /**
      * Set the value of lastMessageContent
      *
@@ -130,6 +139,18 @@ class Conversation
     public function setLastMessageContent($lastMessageContent)
     {
         $this->lastMessageContent = $lastMessageContent;
+
+        return $this;
+    }
+
+    public function getProduct(): ?Product
+    {
+        return $this->product;
+    }
+
+    public function setProduct(?Product $product): self
+    {
+        $this->product = $product;
 
         return $this;
     }

@@ -37,20 +37,23 @@
                 <i class="bi bi-clock"></i> Dernière réponse en moins de ...</p>
             
         </div>
-        <div class="col">
-            {# card user #}
-            <div style="border-color: white; border-style: solid; border-width: 1px; border-radius: 3px; box-shadow: 5px 2px 10px 3px grey; width: 300px; padding: 10px;">
-                {% include "user/_user_card.html.twig" %}
-                
-                <hr>
+        {% if product.user is not same as app.user %}
+            <div class="col">
+                {# card user #}
+                <div style="border-color: white; border-style: solid; border-width: 1px; border-radius: 3px; box-shadow: 5px 2px 10px 3px grey; width: 300px; padding: 10px;">
+                    {% include "user/_user_card.html.twig" %}
+                    
+                    <hr>
 
-                <p style="font-size: 0.9em;"><i class="bi bi-clock"></i> Dernière réponse en moins de ...</p>
-                <div class="d-grid gap-2">
-                    <a style="background-color: orange; color: white; font-weight: bold;" class="btn" type="button">Acheter</a>
-                    <a href="{{ path('message_new', {'product_id': product.id})}} " style="font-weight: bold;" class="btn btn-primary" type="button">Message</a>
+                    <p style="font-size: 0.9em;"><i class="bi bi-clock"></i> Dernière réponse en moins de ...</p>
+                    <div class="d-grid gap-2">
+                        <a style="background-color: orange; color: white; font-weight: bold;" class="btn" type="button">Acheter</a>
+                        <a href="{{ path('message_new', {'product_id': product.id})}} " style="font-weight: bold;" class="btn btn-primary" type="button">Message</a>
+                    </div>
                 </div>
             </div>
-        </div>
+        {% endif %}
+        
     </div>
 
 
