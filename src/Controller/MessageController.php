@@ -78,6 +78,9 @@ class MessageController extends AbstractController
         $message = new Message;
         if($selectedConversation)
         {
+            $selectedConversation->setHasNewMessage(false);
+            $this->em->flush();
+
             $form = $this->createForm(MessageType::class, $message);
             $form->handleRequest($request);
 
@@ -94,6 +97,7 @@ class MessageController extends AbstractController
         $form = $this->createForm(MessageType::class, null, [
             'fieldType' => TextType::class
         ]);
+
         return $this->render('message/index.html.twig', [
             'current_menu' => 'message',
             'conversations' => $this->conversationRepository->findAllByUser($this->getUser()),

@@ -13,22 +13,27 @@
 
     <form class="form" action="{{ path('security_login') }}" method="post">
 
-    <div class="form-group">
-        <label for="_username" class="form-label">Adresse email</label>
-        <input type="text" class="form-control" id="_username" name="_username" value="{{ last_username }}">
-    </div>
+        <div class="form-group">
+            <label for="_username" class="form-label">Adresse email</label>
+            <input type="text" class="form-control" id="_username" name="_username" value="{{ last_username }}">
+        </div>
 
-    <div class="form-group">
-        <label for="_password" class="form-label">Mot de passe</label>
-        <input type="password" class="form-control" id="_password" name="_password">
-    </div>
+        <div class="form-group">
+            <label for="_password" class="form-label">Mot de passe</label>
+            <input type="password" class="form-control" id="_password" name="_password">
+        </div>
 
-    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
 
-    {# If you want to control the URL the user is redirected to on success
-        <input type="hidden" name="_target_path" value="/account"/> #}
+        {# If you want to control the URL the user is redirected to on success
+            <input type="hidden" name="_target_path" value="/account"/> #}
 
-    <button type="submit" class="btn mt-3" style="background-color: orange; color: white; font-weight: bold;">Valider</button>
+        <button type="submit" class="btn mt-3" style="background-color: orange; color: white; font-weight: bold;">Valider</button>
 
+
+    </form>
+
+    <div>qgallet@orange.fr - password</div>
+    <div>jean@gmail.com - jean64</div>
 
 {% endblock %}

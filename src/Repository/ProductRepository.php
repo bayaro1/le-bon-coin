@@ -4,9 +4,10 @@ namespace App\Repository;
 
 use App\Entity\Product;
 use App\Entity\SearchFilter;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 use Knp\Component\Pager\PaginatorInterface;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @extends ServiceEntityRepository<Product>
@@ -23,12 +24,13 @@ class ProductRepository extends ServiceEntityRepository
         parent::__construct($registry, Product::class);
     }
 
-    public function countAllQuery()
+    public function countQuery(SearchFilter $searchFilter)
     {
-        return $this->createQueryBuilder('p')
-                    ->select('p.id')
-                    ->getQuery()
-                    ;
+        $qb = $this->createQueryBuilder('p')
+                    ->select('p.id');
+
+        $this->filter($qb, $searchFilter);
+        return $qb->getQuery();
     }
 
     public function findFilteredQuery(SearchFilter $searchFilter)
@@ -40,6 +42,12 @@ class ProductRepository extends ServiceEntityRepository
                     ->orderBy('p.createdAt', 'desc')
                     ;
         
+        $this->filter($qb, $searchFilter);
+        return $qb->getQuery();
+    }
+
+    private function filter(QueryBuilder $qb, SearchFilter $searchFilter)
+    {
         if($searchFilter->getCategory() !== null)
         {
             $qb->andWhere('p.category = :category')
@@ -59,10 +67,7 @@ class ProductRepository extends ServiceEntityRepository
                 ;
         }
 
-        return $qb->getQuery();
     }
-
-    
 
 
     public function add(Product $entity, bool $flush = false): void

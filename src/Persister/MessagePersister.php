@@ -71,6 +71,7 @@ class MessagePersister
          if($conversation)
          {
              $conversation->addMessage($message)
+                                ->setHasNewMessage(true)
                                  ->setUpdatedAt(new DateTimeImmutable())
                                  ;
          }
@@ -80,6 +81,7 @@ class MessagePersister
              $conversation->setUser($message->getReceiver())
                          ->setInterlocutor($message->getSender())
                          ->addMessage($message)
+                         ->setHasNewMessage(true)
                          ->setUpdatedAt(new DateTimeImmutable())
                          ->setProduct($message->getProduct())
                          ;

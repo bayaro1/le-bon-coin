@@ -3,6 +3,7 @@ twig:
     form_themes: ['bootstrap_5_layout.html.twig']
     globals:
         cart_service: '@App\Service\CartService'
+        conversation_repository: '@App\Repository\ConversationRepository'
 
 when@test:
     twig:

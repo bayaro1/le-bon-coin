@@ -23,6 +23,23 @@ class ConversationRepository extends ServiceEntityRepository
         parent::__construct($registry, Conversation::class);
     }
 
+    public function countNewByUser(?User $user)
+    {
+        if(!$user)
+        {
+            return null;
+        }
+        $count = count(
+            $this->createQueryBuilder('c')
+                    ->select('c.id')
+                    ->where('c.user = :user AND c.hasNewMessage = true')
+                    ->setParameter('user', $user)
+                    ->getQuery()
+                    ->getResult()
+        ); 
+        return $count ?: null;
+    }
+
     /**
      * @param User $user
      * @param User $interlocutor

@@ -37,6 +37,9 @@ class Conversation
     #[ORM\JoinColumn(nullable: false)]
     private $product;
 
+    #[ORM\Column(type: 'boolean', nullable: true)]
+    private $hasNewMessage;
+
 
     public function __construct()
     {
@@ -151,6 +154,18 @@ class Conversation
     public function setProduct(?Product $product): self
     {
         $this->product = $product;
+
+        return $this;
+    }
+
+    public function isHasNewMessage(): ?bool
+    {
+        return $this->hasNewMessage;
+    }
+
+    public function setHasNewMessage(?bool $hasNewMessage): self
+    {
+        $this->hasNewMessage = $hasNewMessage;
 
         return $this;
     }
