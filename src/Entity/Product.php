@@ -48,6 +48,11 @@ class Product
     #[ORM\OneToMany(mappedBy: 'product', targetEntity: Picture::class, orphanRemoval: true, cascade: ['persist'])]
     private $pictures;
 
+    /**
+     * @var Picture|null
+     */
+    private $firstPicture;
+
 
     /**
      * @var null|File[]
@@ -176,6 +181,7 @@ class Product
 
         return $this;
     }
+    
 
     /**
      * @return Collection<int, Picture>
@@ -243,13 +249,18 @@ class Product
 
     public function getFirstPicture():?Picture
     {
-        if($this->pictures->count() === 0)
+        if($this->firstPicture === null)
         {
-            $picture = new Picture;
-            $picture->setFileName('lorem.jpg');
-            return $picture;
+            $this->firstPicture = $this->getPictures()->get(0);
         }
-        return $this->pictures->get(0);
+        return $this->firstPicture;
+    }
+
+    public function setFirstPicture(Picture $picture):self 
+    {
+        $this->firstPicture = $picture;
+
+        return $this;
     }
 
     /**

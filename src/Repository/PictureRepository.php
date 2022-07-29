@@ -21,6 +21,25 @@ class PictureRepository extends ServiceEntityRepository
         parent::__construct($registry, Picture::class);
     }
 
+    public function findByProducts(array $products)
+    {
+        /** @var Picture[] */
+        $pictures = $this->createQueryBuilder('p')
+                        ->select('p')
+                        ->where('p.product IN (:products)')
+                        ->groupBy('p.product')
+                        ->setParameter('products', $products)
+                        ->getQuery()
+                        ->getResult();
+        
+        $picturesByProductId = [];
+        foreach($pictures as $picture)
+        {
+            $picturesByProductId[$picture->getProduct()->getId()] = $picture;
+        }
+        return $picturesByProductId;
+    }
+
     public function add(Picture $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);

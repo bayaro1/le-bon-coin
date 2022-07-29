@@ -18,7 +18,10 @@
     <div class="row">
         <div class="col-7">
             {# photo à la une #}
-            <img src=" {{ vich_uploader_asset(product.firstPicture, 'uploadedFile') | imagine_filter('my_first') }}">
+            {% if product.firstPicture is not same as null %}
+                <img src=" {{ vich_uploader_asset(product.firstPicture, 'uploadedFile') | imagine_filter('my_first') }}">
+            {% endif %}
+
             <h4 class="mt-4">{{ product.title }}</h4>
             <p style="font-size: 1.5em; color: orange; font-weight: bold;">{{ product.price | price_formater }}</p>
             <p>{{ product.createdAt | date_formater }}</p>

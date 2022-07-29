@@ -4,10 +4,12 @@ namespace App\Repository;
 
 use App\Entity\Product;
 use App\Entity\SearchFilter;
+use App\Service\Paginator;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 use Knp\Component\Pager\PaginatorInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @extends ServiceEntityRepository<Product>
@@ -19,9 +21,32 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
  */
 class ProductRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    private Paginator $paginator;
+
+    private PictureRepository $pictureRepository;
+
+    public function __construct(ManagerRegistry $registry, Paginator $paginator, PictureRepository $pictureRepository)
     {
         parent::__construct($registry, Product::class);
+        $this->paginator = $paginator;
+        $this->pictureRepository = $pictureRepository;
+    }
+
+
+    public function findPaginatedFiltered(Request $request, SearchFilter $searchFilter, ?int $perPage = 5):Paginator
+    {
+        $this->paginator->configure($request, $this->countQuery($searchFilter), $this->findFilteredQuery($searchFilter), $perPage);
+        /** @var Product[] */
+        $products = $this->paginator->getItems();
+        $picturesByProductId = $this->pictureRepository->findByProducts($products);
+
+        foreach ($products as $product) {
+            if(array_key_exists($product->getId(), $picturesByProductId))
+            {
+                $product->setFirstPicture($picturesByProductId[$product->getId()]);
+            }
+        }
+        return $this->paginator;
     }
 
     public function countQuery(SearchFilter $searchFilter)
@@ -29,24 +54,23 @@ class ProductRepository extends ServiceEntityRepository
         $qb = $this->createQueryBuilder('p')
                     ->select('p.id');
 
-        $this->filter($qb, $searchFilter);
+        $this->applyFilters($qb, $searchFilter);
         return $qb->getQuery();
     }
 
     public function findFilteredQuery(SearchFilter $searchFilter)
     {
         $qb = $this->createQueryBuilder('p')
-                    ->select('p', 'c', 'pics')
+                    ->select('p', 'c')
                     ->join('p.category', 'c')
-                    ->leftJoin('p.pictures', 'pics')
                     ->orderBy('p.createdAt', 'desc')
                     ;
         
-        $this->filter($qb, $searchFilter);
+        $this->applyFilters($qb, $searchFilter);
         return $qb->getQuery();
     }
 
-    private function filter(QueryBuilder $qb, SearchFilter $searchFilter)
+    private function applyFilters(QueryBuilder $qb, SearchFilter $searchFilter)
     {
         if($searchFilter->getCategory() !== null)
         {

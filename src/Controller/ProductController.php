@@ -39,7 +39,7 @@ class ProductController extends AbstractController
 
         $searchFilterForm->handleRequest($request);
 
-        $paginator->configure($request, $this->repository->countQuery($searchFilter), $this->repository->findFilteredQuery($searchFilter), 5);
+        $paginator = $this->repository->findPaginatedFiltered($request, $searchFilter, 5);
 
         return $this->render('product/index.html.twig', [
             'current_menu' => 'product_view',
@@ -50,9 +50,9 @@ class ProductController extends AbstractController
     }
 
     #[Route('/{category}/{product_id}', name: 'product_show')]
-    #[ParamConverter('product', options: ['mapping' => ['product_id' => 'id']])]
-    public function show(Product $product)
+    public function show(int $product_id)
     {
+        $product = $this->repository->find($product_id);
         return $this->render('product/show.html.twig', [
             'product' => $product,
             'user' => $product->getUser()
