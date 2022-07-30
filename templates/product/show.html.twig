@@ -18,11 +18,26 @@
     <div class="row">
         <div class="col-7">
             {# photo à la une #}
-            {% if product.pictures.get(0) is not same as null %}
-                <img src=" {{ vich_uploader_asset(product.pictures.get(0), 'uploadedFile') | imagine_filter('my_first') }}">
+            {% if product.firstPicture is not same as null %}
+                <img style="width: 80%; max-height: 400px;" src=" {{ vich_uploader_asset(product.firstPicture, 'uploadedFile') | imagine_filter('my_first') }}">
+                
             {% else %}
                 <img src="{{ '/images/products/lorem.jpg' | imagine_filter('my_first') }} ">
             {% endif %}
+
+            <div class="row">
+                {% set pos = 0 %}
+                {% for picture in product.pictures %}
+                <div class="col-1">
+                    <form action="{{ path('product_show', {'category': product.category.name, 'product_id': product.id}) }}" method="post">
+                        <button class="btn" name="pos" value="{{ pos }}" type="submit">
+                            <img src="{{ vich_uploader_asset(picture, 'uploadedFile') | imagine_filter('my_mini') }}" {% if product.firstPicture is defined and product.firstPicture is same as picture %}style="border: solid black 2px;"{% endif %}>
+                        </button>
+                    </form>
+                </div>
+                {% set pos = pos + 1 %}
+                {% endfor %}
+            </div>
 
             <h4 class="mt-4">{{ product.title }}</h4>
             <p style="font-size: 1.5em; color: orange; font-weight: bold;">{{ product.price | price_formater }}</p>

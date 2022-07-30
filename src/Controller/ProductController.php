@@ -2,11 +2,13 @@
 
 namespace App\Controller;
 
+use App\Entity\Picture;
 use App\Entity\Product;
 use App\Form\ProductType;
 use App\Service\Paginator;
 use App\Entity\SearchFilter;
 use App\Form\SearchFilterType;
+use App\Repository\PictureRepository;
 use Doctrine\ORM\Mapping\Entity;
 use App\Repository\ProductRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -22,11 +24,14 @@ class ProductController extends AbstractController
 {
     private ProductRepository $repository;
 
+    private PictureRepository $pictureRepository;
+
     private EntityManagerInterface $em;
 
-    public function __construct(ProductRepository $repository, EntityManagerInterface $em)
+    public function __construct(ProductRepository $repository, PictureRepository $pictureRepository, EntityManagerInterface $em)
     {
         $this->repository = $repository;
+        $this->pictureRepository = $pictureRepository;
         $this->em = $em;
     }
 
@@ -50,9 +55,16 @@ class ProductController extends AbstractController
     }
 
     #[Route('/{category}/{product_id}', name: 'product_show')]
-    public function show(int $product_id)
+    #[ParamConverter('product', options: ['mapping' => ['product_id' => 'id']])]
+    public function show(Product $product, Request $request)
     {
-        $product = $this->repository->find($product_id);
+        $pos = $request->get('pos') ?: 0;
+        
+        if($product->getPictures()->get($pos))
+        {
+            $product->setFirstPicture($product->getPictures()->get($pos));
+        }
+
         return $this->render('product/show.html.twig', [
             'product' => $product,
             'user' => $product->getUser()
