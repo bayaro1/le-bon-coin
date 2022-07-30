@@ -36,16 +36,7 @@ class ProductRepository extends ServiceEntityRepository
     public function findPaginatedFiltered(Request $request, SearchFilter $searchFilter, ?int $perPage = 5):Paginator
     {
         $this->paginator->configure($request, $this->countQuery($searchFilter), $this->findFilteredQuery($searchFilter), $perPage);
-        /** @var Product[] */
-        $products = $this->paginator->getItems();
-        $picturesByProductId = $this->pictureRepository->findByProducts($products);
-
-        foreach ($products as $product) {
-            if(array_key_exists($product->getId(), $picturesByProductId))
-            {
-                $product->setFirstPicture($picturesByProductId[$product->getId()]);
-            }
-        }
+        $this->hydrateWithFirstPicture($this->paginator->getItems());
         return $this->paginator;
     }
 
@@ -91,6 +82,21 @@ class ProductRepository extends ServiceEntityRepository
                 ;
         }
 
+    }
+
+    /**
+     * @param Product[]
+     */
+    public function hydrateWithFirstPicture($products):void 
+    {
+        $picturesByProductId = $this->pictureRepository->findByProducts($products);
+        foreach($products as $product)
+        {
+            if(array_key_exists($product->getId(), $picturesByProductId))
+            {
+                $product->setFirstPicture($picturesByProductId[$product->getId()]);
+            }
+        }
     }
 
 

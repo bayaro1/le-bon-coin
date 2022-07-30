@@ -100,7 +100,7 @@ class MessageController extends AbstractController
 
         return $this->render('message/index.html.twig', [
             'current_menu' => 'message',
-            'conversations' => $this->conversationRepository->findAllByUser($this->getUser()),
+            'conversations' => $this->conversationRepository->findByUser($this->getUser()),
             'selected_conversation' => $selectedConversation,
             'form' => $form->createView()
         ]);

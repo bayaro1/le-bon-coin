@@ -249,10 +249,6 @@ class Product
 
     public function getFirstPicture():?Picture
     {
-        if($this->firstPicture === null)
-        {
-            $this->firstPicture = $this->getPictures()->get(0);
-        }
         return $this->firstPicture;
     }
 

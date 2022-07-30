@@ -6,6 +6,8 @@
 
                 <img src="{{ vich_uploader_asset(product.firstPicture, 'uploadedFile') | imagine_filter('my_thumb') }} " class="img-fluid rounded-start" style="height: 200px;" alt="...">
             
+            {% else %}
+                <img src="{{ '/images/products/lorem.jpg' | imagine_filter('my_thumb') }}"  class="img-fluid rounded-start" style="height: 200px;" alt="...">
             {% endif %}
             
             </div>

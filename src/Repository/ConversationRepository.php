@@ -18,9 +18,12 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class ConversationRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    private ProductRepository $productRepository;
+
+    public function __construct(ManagerRegistry $registry, ProductRepository $productRepository)
     {
         parent::__construct($registry, Conversation::class);
+        $this->productRepository = $productRepository;
     }
 
     public function countNewByUser(?User $user)
@@ -57,17 +60,25 @@ class ConversationRepository extends ServiceEntityRepository
                     ;
     }
 
-    public function findAllByUser(User $user)
+    public function findByUser(User $user)
     {
-        return $this->createQueryBuilder('c')
-                    ->select('c', 'm')
-                    ->leftJoin('c.messages', 'm')
+        $conversations = $this->createQueryBuilder('c')
+                    ->select('c', 'p')
+                    ->join('c.product', 'p')
                     ->where('c.user = :user')
                     ->setParameter('user', $user)
                     ->orderBy('c.updatedAt', 'DESC')
                     ->getQuery()
                     ->getResult()
                     ;
+        $products = [];
+        foreach($conversations as $conversation)
+        {
+            $products[] = $conversation->getProduct();
+        }
+        $this->productRepository->hydrateWithFirstPicture($products);
+
+        return $conversations;
     }
 
     public function add(Conversation $entity, bool $flush = false): void

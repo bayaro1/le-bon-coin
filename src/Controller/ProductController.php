@@ -39,7 +39,7 @@ class ProductController extends AbstractController
 
         $searchFilterForm->handleRequest($request);
 
-        $paginator = $this->repository->findPaginatedFiltered($request, $searchFilter, 5);
+        $paginator = $this->repository->findPaginatedFiltered($request, $searchFilter, 50);
 
         return $this->render('product/index.html.twig', [
             'current_menu' => 'product_view',
