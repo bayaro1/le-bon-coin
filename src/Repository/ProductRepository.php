@@ -81,6 +81,12 @@ class ProductRepository extends ServiceEntityRepository
                 ->setParameter('q', '%'.$searchFilter->getQSearch().'%')
                 ;
         }
+        if($searchFilter->getUser() !== null)
+        {
+            $qb->andWhere('p.user = :user')
+                ->setParameter('user', $searchFilter->getUser())
+                ;
+        }
 
     }
 

@@ -2,8 +2,9 @@
 
 namespace App\Entity;
 
-use App\Repository\SearchFilterRepository;
+use App\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\SearchFilterRepository;
 
 #[ORM\Entity(repositoryClass: SearchFilterRepository::class)]
 class SearchFilter
@@ -21,6 +22,11 @@ class SearchFilter
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $city;
+
+    /**
+     * @var User
+     */
+    private $user;
 
     public function getId(): ?int
     {
@@ -59,6 +65,30 @@ class SearchFilter
     public function setCity(?string $city): self
     {
         $this->city = $city;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of user
+     *
+     * @return  User
+     */ 
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    /**
+     * Set the value of user
+     *
+     * @param  User  $user
+     *
+     * @return  self
+     */ 
+    public function setUser(User $user)
+    {
+        $this->user = $user;
 
         return $this;
     }

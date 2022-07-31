@@ -6,6 +6,7 @@ use App\Entity\User;
 
 
 use App\Form\RegistrationFormType;
+use App\Notification\EmailNotification\WelcomeEmail;
 use App\Service\CartService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,6 +15,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface;
 
 class SecurityController extends AbstractController
 {
@@ -40,7 +42,7 @@ class SecurityController extends AbstractController
     }
 
     #[Route('/inscription', name: 'security_register')]
-    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
+    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager, WelcomeEmail $welcomeEmail, TokenGeneratorInterface $tokenGenerator): Response
     {
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
@@ -54,11 +56,14 @@ class SecurityController extends AbstractController
                     $user,
                     $user->getPlainPassword()
                 )
-            );
+            )
+                ->setConfirmationToken($tokenGenerator->generateToken())
+                ;
 
             $entityManager->persist($user);
             $entityManager->flush();
-            // do anything else you need here, like send an email
+            
+            $welcomeEmail->send($user);
 
             return $this->redirectToRoute('security_login');
         }

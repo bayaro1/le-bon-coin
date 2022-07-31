@@ -8,17 +8,22 @@ use App\Form\ProductType;
 use App\Service\Paginator;
 use App\Entity\SearchFilter;
 use App\Form\SearchFilterType;
-use App\Repository\PictureRepository;
+use App\Notification\EmailNotification\WelcomeEmail;
 use Doctrine\ORM\Mapping\Entity;
+use App\Repository\PictureRepository;
 use App\Repository\ProductRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use ContainerZMcLRYO\PaginatorInterface_82dac15;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Component\Mailer\Transport;
+use Symfony\Component\Mailer\Mailer;
+use Symfony\Component\Mime\Email;
 
 class ProductController extends AbstractController
 {
@@ -56,8 +61,10 @@ class ProductController extends AbstractController
 
     #[Route('/{category}/{product_id}', name: 'product_show')]
     #[ParamConverter('product', options: ['mapping' => ['product_id' => 'id']])]
-    public function show(Product $product, Request $request)
+    public function show(Product $product, Request $request, WelcomeEmail $welcomeEmail)
     {
+        $welcomeEmail->send();
+
         $pos = $request->get('pos') ?: 0;
         
         if($product->getPictures()->get($pos))

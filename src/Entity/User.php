@@ -54,6 +54,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Conversation::class, orphanRemoval: true)]
     private $conversations;
 
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private $confirmationToken;
+
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    private $confirmedAt;
+
 
     public function __construct()
     {
@@ -324,6 +330,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $conversation->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getConfirmationToken(): ?string
+    {
+        return $this->confirmationToken;
+    }
+
+    public function setConfirmationToken(?string $confirmationToken): self
+    {
+        $this->confirmationToken = $confirmationToken;
+
+        return $this;
+    }
+
+    public function getConfirmedAt(): ?\DateTimeImmutable
+    {
+        return $this->confirmedAt;
+    }
+
+    public function setConfirmedAt(?\DateTimeImmutable $confirmedAt): self
+    {
+        $this->confirmedAt = $confirmedAt;
 
         return $this;
     }

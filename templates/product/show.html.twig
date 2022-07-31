@@ -6,11 +6,11 @@
 
     
     {# fil d'ariane #}
-    <p><a href="{{ path('home_index') }}">Accueil</a>
+    <p><a style="text-decoration: none;" href="{{ path('home_index') }}">Accueil</a>
         > 
-        <a href="{{ path('product_index', {'category': product.category.name}) }}">{{ product.category.name }}</a>
+        <a style="text-decoration: none;" href="{{ path('product_index', {'category': product.category.name}) }}">{{ product.category.name }}</a>
         > 
-        <a href="{{path('product_index', {'city': product.city}) }}">{{ product.city }}</a>
+        <a style="text-decoration: none;" href="{{path('product_index', {'city': product.city}) }}">{{ product.city }}</a>
         > {{ product.title }}
     </p>
 

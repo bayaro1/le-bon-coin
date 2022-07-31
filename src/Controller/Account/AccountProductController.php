@@ -1,6 +1,7 @@
 <?php
 namespace App\Controller\Account;
 
+use App\Entity\SearchFilter;
 use App\Repository\ProductRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Annotation\Route;
@@ -23,13 +24,17 @@ class AccountProductController extends AbstractController
 
 
     #[Route('/', name: 'account_product_index')]
-    public function index():Response
+    public function index(Request $request):Response
     {
-        $products = $this->repository->findBy(['user' => $this->getUser()], ['createdAt' => 'DESC']);
+        $searchFilter = new SearchFilter;
+        $searchFilter->setUser($this->getUser());
+        $paginator = $this->repository->findPaginatedFiltered($request, $searchFilter);
+        $count = $this->repository->count(['user' => $this->getUser()]);
         return $this->render('account/product/index.html.twig', [
             'current_menu' => 'account',
             'current_submenu' => 'account_product',
-            'products' => $products
+            'paginator' => $paginator,
+            'count' => $count
         ]);
     }
 

@@ -4,16 +4,24 @@
 
     <div style="background-color: rgba(5, 5, 5, 0.03);">
 
-        {% include "layout/_navbar.html.twig" %}
+        {% block navbar %}
+            {% include "layout/_navbar.html.twig" %}
+        {% endblock %}
         
         <div class="container mt-4">
 
+        {% block nav_secondary %}{% endblock %}
+
+        {% block flashes %}
             {% include "layout/_flashes.html.twig" %}
+        {% endblock %}
             
             {% block content %}{% endblock %}
         </div>
 
-        {% include "layout/_footer.html.twig" %}
+        {% block footer %}
+            {% include "layout/_footer.html.twig" %}
+        {% endblock %}
     </div>
 
 {% endblock %}

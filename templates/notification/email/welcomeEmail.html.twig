@@ -1,0 +1,10 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+    <p>Bienvenue sur Lebongroin, {{ user.username }} !</p>
+
+    <p>Afin de confirmer votre compte, veuillez cliquer sur le lien suivant : <p>
+    <br>
+    <br>
+    <p>{{ user.confirmationToken }}</p>
+{% endblock %}
