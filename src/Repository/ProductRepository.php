@@ -43,7 +43,9 @@ class ProductRepository extends ServiceEntityRepository
     public function countQuery(SearchFilter $searchFilter)
     {
         $qb = $this->createQueryBuilder('p')
-                    ->select('p.id');
+                    ->select('p.id')
+                    ->join('p.category', 'c')
+                    ;
 
         $this->applyFilters($qb, $searchFilter);
         return $qb->getQuery();

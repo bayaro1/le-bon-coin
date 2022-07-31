@@ -61,10 +61,8 @@ class ProductController extends AbstractController
 
     #[Route('/{category}/{product_id}', name: 'product_show')]
     #[ParamConverter('product', options: ['mapping' => ['product_id' => 'id']])]
-    public function show(Product $product, Request $request, WelcomeEmail $welcomeEmail)
+    public function show(Product $product, Request $request)
     {
-        $welcomeEmail->send();
-
         $pos = $request->get('pos') ?: 0;
         
         if($product->getPictures()->get($pos))
