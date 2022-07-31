@@ -4,7 +4,8 @@
     <p>Bienvenue sur Lebongroin, {{ user.username }} !</p>
 
     <p>Afin de confirmer votre compte, veuillez cliquer sur le lien suivant : <p>
+    <button class="btn btn-primary">salut</button>
     <br>
     <br>
-    <p>{{ user.confirmationToken }}</p>
+    <a href="{{ link }}">Cliquez ici pour valider votre compte</a>
 {% endblock %}

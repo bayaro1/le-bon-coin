@@ -8,6 +8,8 @@ class WelcomeEmail extends EmailBuilder
 {
     public function send(User $user)
     {
+        $link = 'http://localhost:8000/vérification-du-compte?user='.$user->getId().'&token='.$user->getConfirmationToken();
+
         $this->sendEmail(
             $this->createEmail()
             ->from('hello@example.com')
@@ -18,7 +20,8 @@ class WelcomeEmail extends EmailBuilder
             //->priority(Email::PRIORITY_HIGH)
             ->subject('Bienvenue dans la communauté Lebongroin, '. $user->getUsername() .' !')
             ->html($this->twig->render('notification/email/welcomeEmail.html.twig', [
-                'user' => $user
+                'user' => $user,
+                'link' => $link
             ]))
         );
     }
