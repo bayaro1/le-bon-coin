@@ -6,6 +6,7 @@ use App\Entity\User;
 
 
 use App\Form\RegistrationFormType;
+use App\Notification\EmailNotification\PasswordInitEmail;
 use App\Notification\EmailNotification\WelcomeEmail;
 use App\Repository\UserRepository;
 use App\Service\CartService;
@@ -104,6 +105,39 @@ class SecurityController extends AbstractController
         $this->em->flush();
         $this->addFlash('success', 'Votre adresse email est désormais vérifiée ! Vous pouvez vous connecter !');
         return $this->redirectToRoute('security_login');
+    }
+
+
+    #[Route('réinitialisation-du-mot-de-passe', name: 'security_passwordInit')]
+    public function passwordInit(Request $request, TokenGeneratorInterface $tokenGenerator, PasswordInitEmail $passwordInitEmail): Response
+    {
+        if($request->get('email'))
+        {
+            /** @var User */
+            $user = $this->userRepository->findOneBy(['email' => $request->get('email')]);
+            if(!$user)
+            {
+                throw new Exception('Il n\'y a pas de compte associé à cet email');
+            }
+            $user->setPasswordInitToken($tokenGenerator->generateToken());
+            $this->em->flush();
+            $passwordInitEmail->send($user);
+            $this->addFlash('success', 'Un lien de réinitialisation du mot de passe vous a été envoyé par email !');
+            return $this->redirectToRoute('security_login');
+        }
+        return $this->render('security/password_init.html.twig');
+    }
+
+    #[Route('verifyPasswordInit', name: 'security_verifyPasswordInit')]
+    public function verifyPasswordInit(Request $request)
+    {
+        /** @var User */
+        $user = $this->userRepository->find($request->get('user'));
+        if(!$user OR $user->getPasswordInitToken() !== $request->get('token'))
+        {
+            throw new Exception('Le lien utilisé n\'est pas valide !');
+        }
+        return $this->render('security/new_password.html.twig');
     }
 
   }

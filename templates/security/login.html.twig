@@ -34,7 +34,7 @@
             <input type="password" class="form-control" id="_password" name="_password">
         </div>
 
-        <div class="mb-4"><a style="text-decoration: none; font-size: 0.8em;" href="">Mot de passe oublié</a></div>
+        <div class="mb-4"><a style="text-decoration: none; font-size: 0.8em;" href="{{ path('security_passwordInit') }}">Mot de passe oublié</a></div>
 
         <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
 

@@ -1,16 +1,15 @@
 <?php
 namespace App\Notification\EmailNotification;
 
-use App\Entity\User;
 use App\Notification\EmailBuilder;
 
-class WelcomeEmail extends EmailBuilder
+class PasswordInitEmail extends EmailBuilder
 {
-    public function send(User $user)
+    public function send($user):void 
     {
-        $link = self::APP . $this->urlGenerator->generate('security_confirmAccount', [
-            'id' => $user->getId(),
-            'token' => $user->getConfirmationToken()
+        $link = self::APP . $this->urlGenerator->generate('security_verifyPasswordInit', [
+            'user' => $user->getId(),
+            'token' => $user->getPasswordInitToken()
         ]);
 
         $this->sendEmail(
@@ -21,8 +20,8 @@ class WelcomeEmail extends EmailBuilder
             //->bcc('bcc@example.com')
             //->replyTo('fabien@example.com')
             //->priority(Email::PRIORITY_HIGH)
-            ->subject('Bienvenue dans la communauté Lebongroin, '. $user->getUsername() .' !')
-            ->html($this->twig->render('notification/email/welcomeEmail.html.twig', [
+            ->subject('Réinitialisation de votre mot de passe Lebongroin')
+            ->html($this->twig->render('notification/email/passwordInitEmail.html.twig', [
                 'user' => $user,
                 'link' => $link
             ]))

@@ -60,6 +60,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     private $confirmedAt;
 
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private $passwordInitToken;
+
 
     public function __construct()
     {
@@ -354,6 +357,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setConfirmedAt(?\DateTimeImmutable $confirmedAt): self
     {
         $this->confirmedAt = $confirmedAt;
+
+        return $this;
+    }
+
+    public function getPasswordInitToken(): ?string
+    {
+        return $this->passwordInitToken;
+    }
+
+    public function setPasswordInitToken(?string $passwordInitToken): self
+    {
+        $this->passwordInitToken = $passwordInitToken;
 
         return $this;
     }
