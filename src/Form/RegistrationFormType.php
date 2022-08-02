@@ -30,6 +30,7 @@ class RegistrationFormType extends AbstractType
                 ],
             ])
             ->add('plainPassword', PasswordType::class, [
+                'always_empty' => false,
                 'constraints' => [
                     new NotBlank([
                         'message' => 'Veuillez entrer un mot de passe',
@@ -42,7 +43,9 @@ class RegistrationFormType extends AbstractType
                     ]),
                 ],
             ])
-            ->add('passwordConfirm', PasswordType::class)
+            ->add('passwordConfirm', PasswordType::class, [
+                'always_empty' => false
+            ])
         ;
     }
 

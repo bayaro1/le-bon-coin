@@ -1,10 +1,9 @@
 <?php 
 namespace App\Controller;
 
+use App\Entity\PasswordInit;
 use App\Entity\User;
-
-
-
+use App\Form\PasswordInitType;
 use App\Form\RegistrationFormType;
 use App\Notification\EmailNotification\PasswordInitEmail;
 use App\Notification\EmailNotification\WelcomeEmail;
@@ -102,6 +101,7 @@ class SecurityController extends AbstractController
             throw new Exception('Le lien utilisé n\'est pas valide !');
         }
         $user->setConfirmedAt(new DateTimeImmutable());
+        $user->setConfirmationToken(null);
         $this->em->flush();
         $this->addFlash('success', 'Votre adresse email est désormais vérifiée ! Vous pouvez vous connecter !');
         return $this->redirectToRoute('security_login');
@@ -129,15 +129,40 @@ class SecurityController extends AbstractController
     }
 
     #[Route('verifyPasswordInit', name: 'security_verifyPasswordInit')]
-    public function verifyPasswordInit(Request $request)
+    public function verifyPasswordInit(Request $request, UserPasswordHasherInterface $userPasswordHasher)
     {
-        /** @var User */
-        $user = $this->userRepository->find($request->get('user'));
-        if(!$user OR $user->getPasswordInitToken() !== $request->get('token'))
+        $passwordInit = new PasswordInit;
+        
+        if(!$request->isMethod('POST'))
         {
-            throw new Exception('Le lien utilisé n\'est pas valide !');
+            /** @var User */
+            $user = $this->userRepository->find($request->get('user'));
+            if(!$user OR $user->getPasswordInitToken() !== $request->get('token'))
+            {
+                throw new Exception('Le lien utilisé n\'est pas valide !');
+            }
+            
+            $passwordInit->setUserId($user->getId());
         }
-        return $this->render('security/new_password.html.twig');
+        $form = $this->createForm(PasswordInitType::class, $passwordInit);
+        $form->handleRequest($request);
+
+        
+        if($form->isSubmitted() && $form->isValid()) 
+        { 
+            $user = $this->userRepository->find($passwordInit->getUserId());
+            $user->setPassword(
+                $userPasswordHasher->hashPassword($user, $passwordInit->getPassword())
+            );
+            $user->setPasswordInitToken(null);
+            $this->em->flush();
+            $this->addFlash('success', 'Le mot de passe a bien été modifié !');
+            return $this->redirectToRoute('security_login');
+        }
+        
+        return $this->render('security/new_password.html.twig', [
+            'form' => $form->createView()
+        ]);
     }
 
   }
