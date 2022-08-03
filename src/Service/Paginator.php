@@ -95,7 +95,8 @@ class Paginator
         
         $numbers_html = [];
         for ($i=$first; $i < $last; $i++) { 
-            $url = $this->urlGenerator->generate($this->route, [self::PAGE_NAME => $i]);
+            $this->query->set(self::PAGE_NAME, $i);
+            $url = $this->urlGenerator->generate($this->route, iterator_to_array($this->query));
             $style = $i === $this->page ? 'style="background-color: black; color: white;"': '';
             $numbers_html[] = '<a class="btn" '.$style.' href="'.$url.'">'.$i.'</a>';
         }

@@ -9,6 +9,8 @@ security:
             entity:
                 class: App\Entity\User
                 property: email
+
+            
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
@@ -20,10 +22,22 @@ security:
 
             logout:
                 path: security_logout
-            custom_authenticator: App\Security\AppAuthenticator
-
                 # where to redirect after logout
                 # target: app_any_route
+
+            custom_authenticator: App\Security\AppAuthenticator
+
+
+            remember_me:
+                secret:   '%kernel.secret%' # required
+                lifetime: 604800 # 1 week in seconds
+                signature_properties: ['confirmedAt']
+                # by default, the feature is enabled by checking a
+                # checkbox in the login form (see below), uncomment the
+                # following line to always enable it.
+                #always_remember_me: true
+
+                
                 
 
             # activate different ways to authenticate
