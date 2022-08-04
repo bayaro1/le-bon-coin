@@ -3,6 +3,7 @@ namespace App\Controller;
 
 use App\Entity\PasswordInit;
 use App\Entity\User;
+use App\Form\LoginType;
 use App\Form\PasswordInitType;
 use App\Form\RegistrationFormType;
 use App\Notification\EmailNotification\PasswordInitEmail;
@@ -16,6 +17,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\FormFactory;
+use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -34,22 +37,26 @@ class SecurityController extends AbstractController
     }
 
     #[Route('/connexion', name: 'security_login')]
-    public function login(AuthenticationUtils $authenticationUtils): Response
+    public function login(AuthenticationUtils $authenticationUtils, FormFactoryInterface $formFactoryInterface): Response
     {
+        $form = $formFactoryInterface->createNamed('', LoginType::class);
         // get the login error if there is one
         $error = $authenticationUtils->getLastAuthenticationError();
+        dump($error);
         $errorMessage = null;
         if($error)
         {
+            $form = $formFactoryInterface->createNamed('', LoginType::class, null, [
+                'choice2FA' => $error->getCode() === 2,
+                'lastUsername' => $authenticationUtils->getLastUsername()
+            ]);
             $errorMessage = $error->getCode() === 0 ? 'Ces identifiants sont invalides !': $error->getMessage();
         }
-        // last username entered by the user
-        $lastUsername = $authenticationUtils->getLastUsername();
 
         return $this->render('security/login.html.twig', [
             'current_menu' => 'login',
-            'last_username' => $lastUsername,
-            'errorMessage'         => $errorMessage,
+            'form' => $form->createView(),
+            'errorMessage' => $errorMessage
         ]);
     }
 

@@ -41,22 +41,25 @@ class AppAuthenticator extends AbstractLoginFormAuthenticator
 
     public function authenticate(Request $request): Passport
     {
-        if(!$this->tokenManager->isTokenValid(new CsrfToken('authenticate', $request->get('_csrf_token'))))
-        {
-            throw new AuthenticationException('Une erreur est survenue !', 1);
-        }
         $email = $request->request->get('_username');
         $user = $this->userRepository->findOneBy(['email' => $email]);
         if($user AND $user->getConfirmedAt() === null)
         {
             throw new AuthenticationException('Votre adresse email n\'a pas été confirmée !', 1);
         }
+        if($user AND $user->isChoice2FA())
+        {
+            if($request->get('token2FA') === null OR $request->get('token2FA') !== $user->getToken2FA())
+            {
+                throw new AuthenticationException('Veuillez entrer un code 2FA', 2);
+            }
+        }
 
         $request->getSession()->set(Security::LAST_USERNAME, $email);
         
         return new Passport(
             new UserBadge($email),
-            new PasswordCredentials($request->request->get('_password', '')),
+            new PasswordCredentials($request->request->get('_password')),
             [
                 new RememberMeBadge(),
                 new CsrfTokenBadge('authenticate', $request->request->get('_csrf_token')),

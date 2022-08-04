@@ -63,6 +63,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $passwordInitToken;
 
+    #[ORM\Column(type: 'boolean', nullable: true)]
+    private $choice2FA;
+
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private $token2FA;
+
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    private $token2FAExpireAt;
+
 
     public function __construct()
     {
@@ -369,6 +378,42 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setPasswordInitToken(?string $passwordInitToken): self
     {
         $this->passwordInitToken = $passwordInitToken;
+
+        return $this;
+    }
+
+    public function isChoice2FA(): ?bool
+    {
+        return $this->choice2FA;
+    }
+
+    public function setChoice2FA(?bool $choice2FA): self
+    {
+        $this->choice2FA = $choice2FA;
+
+        return $this;
+    }
+
+    public function getToken2FA(): ?string
+    {
+        return $this->token2FA;
+    }
+
+    public function setToken2FA(?string $token2FA): self
+    {
+        $this->token2FA = $token2FA;
+
+        return $this;
+    }
+
+    public function getToken2FAExpireAt(): ?\DateTimeImmutable
+    {
+        return $this->token2FAExpireAt;
+    }
+
+    public function setToken2FAExpireAt(?\DateTimeImmutable $token2FAExpireAt): self
+    {
+        $this->token2FAExpireAt = $token2FAExpireAt;
 
         return $this;
     }
