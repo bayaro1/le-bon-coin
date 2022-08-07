@@ -3,12 +3,14 @@ namespace App\Controller;
 
 use App\Entity\PasswordInit;
 use App\Entity\User;
+use App\Exception\AuthenticationException\Authentication2FAException;
 use App\Form\LoginType;
 use App\Form\PasswordInitType;
 use App\Form\RegistrationFormType;
 use App\Notification\EmailNotification\PasswordInitEmail;
 use App\Notification\EmailNotification\WelcomeEmail;
 use App\Repository\UserRepository;
+use App\Security\AppAuthenticator;
 use App\Service\CartService;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
@@ -17,6 +19,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException;
@@ -37,26 +40,34 @@ class SecurityController extends AbstractController
     }
 
     #[Route('/connexion', name: 'security_login')]
-    public function login(AuthenticationUtils $authenticationUtils, FormFactoryInterface $formFactoryInterface): Response
+    public function login(AuthenticationUtils $authenticationUtils, FormFactoryInterface $formFactoryInterface, Request $request): Response
     {
-        $form = $formFactoryInterface->createNamed('', LoginType::class);
+        dump($request->getSession()->get(AppAuthenticator::LAST_PASSWORD));
         // get the login error if there is one
         $error = $authenticationUtils->getLastAuthenticationError();
-        dump($error);
-        $errorMessage = null;
+
+        $form = $formFactoryInterface->createNamed('', LoginType::class, null, [
+            'choice2FA' => $error instanceof Authentication2FAException,
+            'lastUsername' => $request->getSession()->get(AppAuthenticator::LAST_USERNAME),
+            'lastPassword' => $request->getSession()->get(AppAuthenticator::LAST_PASSWORD)
+        ]);
+
         if($error)
         {
-            $form = $formFactoryInterface->createNamed('', LoginType::class, null, [
-                'choice2FA' => $error->getCode() === 2,
-                'lastUsername' => $authenticationUtils->getLastUsername()
-            ]);
-            $errorMessage = $error->getCode() === 0 ? 'Ces identifiants sont invalides !': $error->getMessage();
+            if($error instanceof Authentication2FAException)
+            {
+                $form->get('_token2FA')->addError(new FormError($error->getMessage()));
+            }
+            else
+            {
+                $form->get('_password')->addError(new FormError($error->getMessage()));
+            }
         }
 
+        dump($form->createView());
         return $this->render('security/login.html.twig', [
             'current_menu' => 'login',
-            'form' => $form->createView(),
-            'errorMessage' => $errorMessage
+            'form' => $form->createView()
         ]);
     }
 

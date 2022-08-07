@@ -16,28 +16,34 @@
 
     <p style="text-align: center; font-size: 0.8em;">Connectez-vous pour découvrir toutes nos fonctionnalités.</p>
 
-    {% if errorMessage %}
-        <div class="alert alert-danger">{{ errorMessage }}</div>
-    {% endif %}
 
     <br>
 
     {{ form_start(form) }}
 
-    {{ form_row(form._username, {
-        'label': 'E-mail'
-    }) }}
-    
-    {{ form_row(form._password, {
-        'label': 'Mot de passe'
-    }) }}
-    
+        {% if form._token2FA is defined %}
+            {{ form_row(form.show_username, {
+                'label': 'E-mail'
+            })}}
+            {{ form_row(form.show_password, {
+                'label': 'Mot de passe'
+            })}}
+            {{ form_row(form._token2FA, {
+                'label': 'Code de confirmation'
+            })}}
+        {% endif %}
 
-        <div class="checkbox mb-3">
-            <label>
-                <input type="checkbox" name="_remember_me"> Se souvenir de moi
-            </label>
-        </div>
+        {{ form_row(form._username, {
+            'label': 'E-mail'
+        }) }}
+        
+        {{ form_row(form._password, {
+            'label': 'Mot de passe'
+        }) }}
+
+        {{ form_row(form._remember_me, {
+            'label': 'Se souvenir de moi'
+        }) }}
 
         <div class="d-grid gap-2 mt-4">
             <button type="submit" class="btn mt-3" style="background-color: blue; color: white; font-weight: bold;">Se connecter</button>
@@ -45,28 +51,7 @@
 
     {{ form_end(form) }}
 
-    {# <form class="form" action="{{ path('security_login') }}" method="post">
-
-        <div class="form-group mb-4">
-            <label for="_username" class="form-label">E-mail</label>
-            <input type="text" class="form-control" id="_username" name="_username" value="{{ last_username }}">
-        </div>
-
-        <div class="form-group mt-4">
-            <label for="_password" class="form-label">Mot de passe</label>
-            <input type="password" class="form-control" id="_password" name="_password">
-        </div>
-
-        <div class="mb-4"><a style="text-decoration: none; font-size: 0.8em;" href="{{ path('security_passwordInit') }}">Mot de passe oublié</a></div>
-
-        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
-    
-    </form> #}
-
-        
-
-        
-       
+  
 
         {# If you want to control the URL the user is redirected to on success
             <input type="hidden" name="_target_path" value="/account"/> #}

@@ -3,7 +3,9 @@
 namespace App\Form;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -14,34 +16,64 @@ class LoginType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('_username', EmailType::class, [
-                'data' => $options['lastUsername'],
-                'attr' => [
-                    'name' => '_username'
-                ]
-            ])
-            ->add('_password', PasswordType::class, [
-                'attr' => [
-                    'name' => '_password'
-                ]
-            ])
-        ;
+                ->add('_username', EmailType::class, [
+                    'attr' => [
+                        'value' => $options['lastUsername']
+                    ]
+                ])
+                ->add('_password', PasswordType::class, [
+                    'always_empty' => false,
+                    'attr' => [
+                        'value' => $options['lastPassword']
+                    ]
+                ])
+                ->add('_remember_me', CheckboxType::class, [
+                    'required' => false
+                ])
+                ;
 
         if($options['choice2FA'])
         {
-            $builder->add('_token2FA', TextType::class, [
-                'attr' => [
-                    'name' => '_token2FA'
-                ]
-            ]);
+            $builder->add('_token2FA', TextType::class)
+                    ->add('_username', HiddenType::class, [
+                        'attr' => [
+                            'value' => $options['lastUsername']
+                        ]
+                    ])
+                    ->add('show_username', EmailType::class, [
+                        'attr' => [
+                            'value' => $options['lastUsername'],
+                            'disabled' => true
+                        ]
+                    ])
+                    ->add('_password', HiddenType::class, [
+                        'attr' => [
+                            'value' => $options['lastPassword']
+                        ]
+                    ])
+                    ->add('show_password', PasswordType::class, [
+                        'always_empty' => false,
+                        'attr' => [
+                            'value' => $options['lastPassword'],
+                            'disabled' => true
+                        ]
+                    ])
+                    ;
         }
+                
+        
+
+        
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'choice2FA' => false,
-            'lastUsername' => ''
+            'lastUsername' => null,
+            'lastPassword' => null,
+            'csrf_field_name' => '_csrf_token',
+            'csrf_token_id'   => 'authenticate',
         ]);
     }
 }
