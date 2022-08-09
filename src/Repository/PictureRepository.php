@@ -23,15 +23,43 @@ class PictureRepository extends ServiceEntityRepository
 
     public function findByProducts(array $products)
     {
-        /** @var Picture[] */
-        $pictures = $this->createQueryBuilder('p')
+        // $pictures = $this->createQueryBuilder('p')
+        //                     ->select('p')
+        //                     ->where('p.id IN (:max_ids)')
+        //                     ->setParameter(
+        //                         'max_ids',
+        //                         $this->createQueryBuilder('p')
+        //                                 ->select('MAX(p.id)')
+        //                                 ->where('p.product IN (:products)')
+        //                                 ->setParameter('products', $products)
+        //                                 ->getQuery()
+        //                                 ->getResult()
+        //                     )
+        //                     ->getQuery()
+        //                     ->getResult()
+        //                     ;
+
+
+
+        $qb = $this->createQueryBuilder('p');
+        $pictures = $qb
                         ->select('p')
-                        ->where('p.product IN (:products)')
-                        ->groupBy('p.product')
+                        ->where(
+                            $qb->expr()->in(
+                                'p.id', 
+                                $this->createQueryBuilder('p2')
+                                    ->select('MAX(p2.id)')
+                                    ->where('p2.product IN (:products)')
+                                    ->groupBy('p2.product')
+                                    ->getDQL()
+                            )
+                        )
                         ->setParameter('products', $products)
                         ->getQuery()
                         ->getResult();
-        
+
+                        
+                        
         $picturesByProductId = [];
         foreach($pictures as $picture)
         {

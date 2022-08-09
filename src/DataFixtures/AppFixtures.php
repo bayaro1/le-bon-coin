@@ -58,6 +58,7 @@ class AppFixtures extends Fixture
             $users[] = $user;
             $manager->persist($user);
         }
+        $manager->flush();
 
         /**création des catégories */
         $categories = [];
@@ -113,6 +114,7 @@ class AppFixtures extends Fixture
         /**création des produits */
         for ($i=0; $i < 100; $i++) { 
             $product = new Product;
+            $manager->persist($product);
             $product->setTitle($faker->sentence(3))
                     ->setDescription($faker->paragraph(5))
                     ->setPrice($faker->randomNumber(4))
@@ -122,10 +124,7 @@ class AppFixtures extends Fixture
                     ->setCategory($faker->randomElement($categories))
                     ->setUser($faker->randomElement($users))
                     ;
-            $manager->persist($product);
         }
-
-        
 
 
         /**flush final */
