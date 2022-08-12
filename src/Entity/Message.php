@@ -39,6 +39,11 @@ class Message
         return $this->id;
     }
 
+    public function getExcerpt():string
+    {
+        return substr($this->content, 0, 5).'...';
+    }
+
     public function getSender(): ?User
     {
         return $this->sender;

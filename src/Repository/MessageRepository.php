@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Message;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query\Expr\GroupBy;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -20,6 +21,38 @@ class MessageRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Message::class);
+    }
+
+    /** 
+     * @param Conversation[]
+     */
+    public function findByConversations($conversations)
+    {
+        $qb = $this->createQueryBuilder('m');
+        $lastMessages = $qb
+                            ->select('m')
+                            ->where(
+                                $qb->expr()->in(
+                                    'm.sentAt', 
+                                    $this->createQueryBuilder('m2')
+                                            ->select('MAX(m2.sentAt)')
+                                            ->where('m2.conversation IN (:conversations)')
+                                            ->groupBy('m2.conversation')
+                                            ->getDQL()
+                                )
+                            )
+                            ->groupBy('m.conversation')
+                            ->setParameter('conversations', $conversations)
+                            ->getQuery()
+                            ->getResult()
+                            ;
+
+        $lastMessagesByConversationId = [];
+        foreach($lastMessages as $lastMessage)
+        {
+            $lastMessagesByConversationId[$lastMessage->getConversation()->getId()] = $lastMessage;
+        }
+        return $lastMessagesByConversationId;
     }
 
     public function add(Message $entity, bool $flush = false): void

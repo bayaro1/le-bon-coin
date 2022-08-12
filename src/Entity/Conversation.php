@@ -15,12 +15,8 @@ class Conversation
     #[ORM\Column(type: 'integer')]
     private $id;
 
-
     #[ORM\OneToMany(mappedBy: 'conversation', targetEntity: Message::class, cascade: ['persist'])]
     private $messages;
-    
-    #[ORM\Column(type: 'text')]
-    private $lastMessageContent;
 
     #[ORM\Column(type: 'datetime_immutable')]
     private $updatedAt;
@@ -39,6 +35,11 @@ class Conversation
 
     #[ORM\Column(type: 'boolean', nullable: true)]
     private $hasNewMessage;
+
+    /**
+     * @var Message|null
+     */
+    private $lastMessage;
 
 
     public function __construct()
@@ -64,7 +65,6 @@ class Conversation
     {
         if (!$this->messages->contains($message)) {
             $this->messages[] = $message;
-            $this->lastMessageContent = $message->getContent();
             $message->setConversation($this);
         }
 
@@ -120,32 +120,6 @@ class Conversation
         return $this;
     }
 
-
-    /**
-     * Get the value of lastMessageContent
-     */ 
-    public function getLastMessageContent()
-    {
-        return $this->lastMessageContent;
-    }
-
-    public function getLastMessageExcerpt()
-    {
-        return substr($this->lastMessageContent, 0, 20).'...';
-    }
-
-    /**
-     * Set the value of lastMessageContent
-     *
-     * @return  self
-     */ 
-    public function setLastMessageContent($lastMessageContent)
-    {
-        $this->lastMessageContent = $lastMessageContent;
-
-        return $this;
-    }
-
     public function getProduct(): ?Product
     {
         return $this->product;
@@ -166,6 +140,31 @@ class Conversation
     public function setHasNewMessage(?bool $hasNewMessage): self
     {
         $this->hasNewMessage = $hasNewMessage;
+
+        return $this;
+    }
+
+
+    /**
+     * Get the value of lastMessage
+     *
+     * @return  Message|null
+     */ 
+    public function getLastMessage()
+    {
+        return $this->lastMessage;
+    }
+
+    /**
+     * Set the value of lastMessage
+     *
+     * @param  Message|null  $lastMessage
+     *
+     * @return  self
+     */ 
+    public function setLastMessage($lastMessage)
+    {
+        $this->lastMessage = $lastMessage;
 
         return $this;
     }

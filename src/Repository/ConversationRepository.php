@@ -20,10 +20,13 @@ class ConversationRepository extends ServiceEntityRepository
 {
     private ProductRepository $productRepository;
 
-    public function __construct(ManagerRegistry $registry, ProductRepository $productRepository)
+    private MessageRepository $messageRepository;
+
+    public function __construct(ManagerRegistry $registry, ProductRepository $productRepository, MessageRepository $messageRepository)
     {
         parent::__construct($registry, Conversation::class);
         $this->productRepository = $productRepository;
+        $this->messageRepository = $messageRepository;
     }
 
     public function countNewByUser(?User $user)
@@ -71,6 +74,9 @@ class ConversationRepository extends ServiceEntityRepository
                     ->getQuery()
                     ->getResult()
                     ;
+
+        $this->hydrateWithLastMessage($conversations);
+
         $products = [];
         foreach($conversations as $conversation)
         {
@@ -79,6 +85,21 @@ class ConversationRepository extends ServiceEntityRepository
         $this->productRepository->hydrateWithFirstPicture($products);
 
         return $conversations;
+    }
+
+    /** 
+     * @param Conversation[] $conversations
+     */
+    private function hydrateWithLastMessage($conversations):void 
+    {
+        $lastMessagesByConversationId = $this->messageRepository->findByConversations($conversations);
+        foreach($conversations as $conversation)
+        {
+            if(array_key_exists($conversation->getId(), $lastMessagesByConversationId))
+            {
+                $conversation->setLastMessage($lastMessagesByConversationId[$conversation->getId()]);
+            }
+        }
     }
 
     public function add(Conversation $entity, bool $flush = false): void
