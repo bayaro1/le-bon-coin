@@ -39,8 +39,6 @@ class PictureRepository extends ServiceEntityRepository
         //                     ->getResult()
         //                     ;
 
-
-
         $qb = $this->createQueryBuilder('p');
         $pictures = $qb
                         ->select('p')
@@ -48,17 +46,17 @@ class PictureRepository extends ServiceEntityRepository
                             $qb->expr()->in(
                                 'p.id', 
                                 $this->createQueryBuilder('p2')
-                                    ->select('MAX(p2.id)')
-                                    ->where('p2.product IN (:products)')
-                                    ->groupBy('p2.product')
-                                    ->getDQL()
+                                        ->select('MAX(p2.id)')
+                                        ->where('p2.product IN (:products)')
+                                        ->groupBy('p2.product')
+                                        ->getDQL()
                             )
                         )
                         ->setParameter('products', $products)
                         ->getQuery()
-                        ->getResult();
+                        ->getResult()
+                        ;
 
-                        
                         
         $picturesByProductId = [];
         foreach($pictures as $picture)
@@ -111,3 +109,6 @@ class PictureRepository extends ServiceEntityRepository
 //        ;
 //    }
 }
+
+
+
