@@ -40,13 +40,13 @@ class SecurityController extends AbstractController
     }
 
     #[Route('/connexion', name: 'security_login')]
-    public function login(AuthenticationUtils $authenticationUtils, FormFactoryInterface $formFactoryInterface, Request $request): Response
+    public function login(AuthenticationUtils $authenticationUtils, Request $request): Response
     {
         dump($request->getSession()->get(AppAuthenticator::LAST_PASSWORD));
         // get the login error if there is one
         $error = $authenticationUtils->getLastAuthenticationError();
 
-        $form = $formFactoryInterface->createNamed('', LoginType::class, null, [
+        $form = $this->createForm(LoginType::class, null, [
             'choice2FA' => $error instanceof Authentication2FAException,
             'lastUsername' => $request->getSession()->get(AppAuthenticator::LAST_USERNAME),
             'lastPassword' => $request->getSession()->get(AppAuthenticator::LAST_PASSWORD)

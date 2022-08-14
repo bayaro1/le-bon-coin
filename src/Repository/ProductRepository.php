@@ -3,13 +3,12 @@
 namespace App\Repository;
 
 use App\Entity\Product;
-use App\Entity\SearchFilter;
 use App\Service\Paginator;
 use Doctrine\ORM\QueryBuilder;
+use App\DataModel\SearchFilter;
 use Doctrine\Persistence\ManagerRegistry;
-use Knp\Component\Pager\PaginatorInterface;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Component\HttpFoundation\Request;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @extends ServiceEntityRepository<Product>
@@ -65,28 +64,28 @@ class ProductRepository extends ServiceEntityRepository
 
     private function applyFilters(QueryBuilder $qb, SearchFilter $searchFilter)
     {
-        if($searchFilter->getCategory() !== null)
+        if($searchFilter->categories !== null)
         {
-            $qb->andWhere('p.category = :category')
-                ->setParameter('category', $searchFilter->getCategory())
+            $qb->andWhere('p.category IN (:categories)')
+                ->setParameter('categories', $searchFilter->categories)
                 ;
         }
-        if($searchFilter->getCity() !== null)
+        if($searchFilter->city !== null)
         {
             $qb->andWhere('p.city = :city')
-                ->setParameter('city', $searchFilter->getCity())
+                ->setParameter('city', $searchFilter->city)
                 ;
         }
-        if($searchFilter->getQSearch() !== null)
+        if($searchFilter->qSearch !== null)
         {
             $qb->andWhere('p.title LIKE :q OR c.name LIKE :q')
-                ->setParameter('q', '%'.$searchFilter->getQSearch().'%')
+                ->setParameter('q', '%'.$searchFilter->qSearch.'%')
                 ;
         }
-        if($searchFilter->getUser() !== null)
+        if($searchFilter->user !== null)
         {
             $qb->andWhere('p.user = :user')
-                ->setParameter('user', $searchFilter->getUser())
+                ->setParameter('user', $searchFilter->user)
                 ;
         }
 

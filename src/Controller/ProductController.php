@@ -2,41 +2,29 @@
 
 namespace App\Controller;
 
-use App\Entity\Picture;
 use App\Entity\Product;
 use App\Form\ProductType;
 use App\Service\Paginator;
-use App\Entity\SearchFilter;
 use App\Form\SearchFilterType;
-use App\Notification\EmailNotification\WelcomeEmail;
-use Doctrine\ORM\Mapping\Entity;
+use App\DataModel\SearchFilter;
 use App\Repository\PictureRepository;
 use App\Repository\ProductRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use ContainerZMcLRYO\PaginatorInterface_82dac15;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Symfony\Component\Mailer\Transport;
-use Symfony\Component\Mailer\Mailer;
-use Symfony\Component\Mime\Email;
 
 class ProductController extends AbstractController
 {
     private ProductRepository $repository;
 
-    private PictureRepository $pictureRepository;
-
     private EntityManagerInterface $em;
 
-    public function __construct(ProductRepository $repository, PictureRepository $pictureRepository, EntityManagerInterface $em)
+    public function __construct(ProductRepository $repository, EntityManagerInterface $em)
     {
         $this->repository = $repository;
-        $this->pictureRepository = $pictureRepository;
         $this->em = $em;
     }
 
