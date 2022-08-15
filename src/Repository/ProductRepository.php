@@ -82,10 +82,6 @@ class ProductRepository extends ServiceEntityRepository
                 ->setParameter('q', '%'.$searchFilter->qSearch.'%')
                 ;
         }
-        if($searchFilter->getSortField() !== null)
-        {
-            $qb->orderBy('p.' . $searchFilter->getSortField(), $searchFilter->getSortOrder());
-        }
 
     }
 
