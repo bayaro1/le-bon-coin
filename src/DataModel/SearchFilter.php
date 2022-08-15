@@ -22,5 +22,13 @@ class SearchFilter
      */
     public $city;
 
+    /** 
+     * @var string|null
+     */
+    public $sort;
 
+    /** 
+     * @var string|null
+     */
+    public $order;
 }

@@ -38,7 +38,8 @@ class ProductController extends AbstractController
         $searchFilterForm = $this->createForm(SearchFilterType::class, $searchFilter);
 
         $searchFilterForm->handleRequest($request);
-
+        $searchFilter->sort = $request->get('sort');
+        $searchFilter->order = $request->get('order');
         $paginator = $this->repository->findPaginatedFiltered($request, $searchFilter, 5);
 
         return $this->render('product/index.html.twig', [

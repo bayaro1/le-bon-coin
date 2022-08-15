@@ -9,6 +9,8 @@ use App\DataModel\SearchFilter;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Symfony\Component\Serializer\Extractor\ObjectPropertyListExtractor;
+use Symfony\Component\Serializer\Extractor\ObjectPropertyListExtractorInterface;
 
 /**
  * @extends ServiceEntityRepository<Product>
@@ -23,6 +25,7 @@ class ProductRepository extends ServiceEntityRepository
     private Paginator $paginator;
 
     private PictureRepository $pictureRepository;
+
 
     public function __construct(ManagerRegistry $registry, Paginator $paginator, PictureRepository $pictureRepository)
     {
@@ -81,6 +84,11 @@ class ProductRepository extends ServiceEntityRepository
             $qb->andWhere('p.title LIKE :q OR c.name LIKE :q')
                 ->setParameter('q', '%'.$searchFilter->qSearch.'%')
                 ;
+        }
+        if($searchFilter->sort !== null)
+        {
+            $order = in_array($searchFilter->order, ['asc', 'desc']) ? strtoupper($searchFilter->order): 'ASC';
+            $qb->orderBy('p.'.$searchFilter->sort, $order);
         }
 
     }

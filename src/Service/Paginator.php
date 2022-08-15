@@ -13,6 +13,10 @@ class Paginator
 {
     private const PAGE_NAME = 'p';
 
+    private const SORT_NAME = 'sort';
+
+    private const ORDER_NAME = 'order';
+
     private const PER_PAGE = 20;
 
     private array $items;
@@ -22,6 +26,10 @@ class Paginator
     private int $totalPages;
 
     private int $page;
+
+    private $sort;
+
+    private $order;
 
     private UrlGeneratorInterface $urlGenerator;
 
@@ -37,6 +45,8 @@ class Paginator
 
     public function configure(Request $request, Query $countQuery, Query $selectQuery, ?int $perPage = self::PER_PAGE):void
     {
+        $this->sort = $request->get('sort');
+        $this->order = $request->get('order');
         $this->route = $request->attributes->get('_route');
         $this->query = $request->query;
         if($request->query->getInt(self::PAGE_NAME) === 1)
@@ -57,19 +67,48 @@ class Paginator
         $offset = $perPage * ($this->page - 1);
         $this->totalItems = count($countQuery->getResult());
         $this->totalPages = round($this->totalItems / $perPage);
-        $this->items = $selectQuery->setMaxResults($perPage)
+        $this->items = $selectQuery
+                                ->setMaxResults($perPage)
                                 ->setFirstResult($offset)
                                 ->getResult();
 
     }
     
-
-
     public function getItems():?array 
     {
         return $this->items;
     }
 
+    public function sortLink($sort, $label)
+    {
+        $style = 'text-decoration: none; color: black; border: solid grey 1px; border-radius: 20px; padding-left: 30px; padding-right: 30px; padding-top: 5px; padding-bottom: 5px;';
+        $arrow = null;
+        $order = 'asc';
+        if($this->sort === $sort)
+        {
+            $style = 'text-decoration: none; color: white; background-color: orange; border-radius: 20px; padding-left: 30px; padding-right: 30px; padding-top: 5px; padding-bottom: 5px;';
+            if($this->order === 'asc')
+            {
+                $order = 'desc';
+                $arrow = 'up';
+            }
+            else
+            {
+                $arrow = 'down';
+            }
+        }
+        $url = $this->urlGenerator->generate($this->route, HttpQueryService::modify($this->query, [
+            self::ORDER_NAME => $order,
+            self::SORT_NAME => $sort,
+            self::PAGE_NAME => null
+        ]))
+        ;
+
+        return <<<HTML
+                    <a style="{$style}" href="$url">$label <i class="bi bi-chevron-double-{$arrow}"></i></a>
+                HTML;
+
+    }
 
     public function paginationLinks():string 
     {
@@ -96,7 +135,9 @@ class Paginator
         $numbers_html = [];
         for ($i=$first; $i < $last; $i++) { 
             $this->query->set(self::PAGE_NAME, $i);
-            $url = $this->urlGenerator->generate($this->route, iterator_to_array($this->query));
+            $url = $this->urlGenerator->generate($this->route, array_merge(iterator_to_array($this->query), [
+                self::PAGE_NAME => $i
+            ]));
             $style = $i === $this->page ? 'style="background-color: black; color: white;"': '';
             $numbers_html[] = '<a class="btn" '.$style.' href="'.$url.'">'.$i.'</a>';
         }
@@ -108,8 +149,9 @@ class Paginator
     {
         if($this->page > 1)
         {
-            $this->query->set(self::PAGE_NAME, $this->page - 1);
-            $previousUrl = $this->urlGenerator->generate($this->route, iterator_to_array($this->query));
+            $previousUrl = $this->urlGenerator->generate($this->route, HttpQueryService::modify($this->query, [
+                self::PAGE_NAME => $this->page - 1
+            ]));
             return <<<HTML
                         <a href="$previousUrl" style="color: black;" class="btn me-2"><i class="bi bi-chevron-left"></i></a>
                         HTML;
@@ -126,8 +168,9 @@ class Paginator
     {
         if($this->page < $this->totalPages)
         {
-            $this->query->set(self::PAGE_NAME, $this->page + 1);
-            $nextUrl = $this->urlGenerator->generate($this->route, iterator_to_array($this->query));
+            $nextUrl = $this->urlGenerator->generate($this->route, HttpQueryService::modify($this->query, [
+                self::PAGE_NAME => $this->page + 1
+            ]));
             return <<<HTML
                         <a href="$nextUrl" style="color: black;" class="btn ms-2"><i class="bi bi-chevron-right" ></i></a>
                         HTML;

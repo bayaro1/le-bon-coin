@@ -1,13 +1,12 @@
-<div style="width: 40%;">
-    <div class="row">
+<div style="width: 50%;">
+    <div class="row m-4">
+        {% autoescape false %}
         <div class="col">
-            Tri
+            {{ paginator.sortLink('createdAt', 'date') }}
         </div>
         <div class="col">
-            prix
+            {{ paginator.sortLink('price', 'prix') }}
         </div>
-        <div class="col">
-            date
-        </div>
+        {% endautoescape %}
     </div>
 </div>
