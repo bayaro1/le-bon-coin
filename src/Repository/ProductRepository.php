@@ -64,10 +64,10 @@ class ProductRepository extends ServiceEntityRepository
 
     private function applyFilters(QueryBuilder $qb, SearchFilter $searchFilter)
     {
-        if($searchFilter->categories !== null)
+        if($searchFilter->category !== null)
         {
-            $qb->andWhere('p.category IN (:categories)')
-                ->setParameter('categories', $searchFilter->categories)
+            $qb->andWhere('p.category = :category')
+                ->setParameter('category', $searchFilter->category)
                 ;
         }
         if($searchFilter->city !== null)
@@ -82,11 +82,9 @@ class ProductRepository extends ServiceEntityRepository
                 ->setParameter('q', '%'.$searchFilter->qSearch.'%')
                 ;
         }
-        if($searchFilter->user !== null)
+        if($searchFilter->getSortField() !== null)
         {
-            $qb->andWhere('p.user = :user')
-                ->setParameter('user', $searchFilter->user)
-                ;
+            $qb->orderBy('p.' . $searchFilter->getSortField(), $searchFilter->getSortOrder());
         }
 
     }

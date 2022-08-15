@@ -7,6 +7,8 @@ use App\Form\ProductType;
 use App\Service\Paginator;
 use App\Form\SearchFilterType;
 use App\DataModel\SearchFilter;
+use App\DataModel\SortFilter;
+use App\Form\SortFilterType;
 use App\Repository\PictureRepository;
 use App\Repository\ProductRepository;
 use Doctrine\ORM\EntityManagerInterface;

@@ -1,12 +1,9 @@
 
-
-{{ form_start(search_filter_form) }}
-
 <div style="border-color: white; border-style: solid; border-width: 1px; border-radius: 3px; box-shadow: 5px 2px 10px 3px grey; width: 900px;" class="m-4">
     
     <div class="m-2 row">
         <div class="col">
-            {{ form_row(search_filter_form.categories, {
+            {{ form_row(search_filter_form.category, {
                 label: false,
                 placeholder: 'Catégorie'
             }) }}
@@ -28,10 +25,8 @@
             }) }}
         </div>
         <div class="col">
-            <button class="btn btn-primary">Rechercher</button>
+            <button class="btn btn-primary w-100">Rechercher</button>
         </div>
     </div>
 </div>
 
-
-{{ form_end(search_filter_form) }}
