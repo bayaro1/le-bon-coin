@@ -16,6 +16,8 @@
 
         {% if paginator.items is empty %}
             <p>Désolé, nous n'avons pas ça sous la main !</p>
+        {% else %}
+            {% include "product/_sort_filter.html.twig" %}
         {% endif %}
 
     
