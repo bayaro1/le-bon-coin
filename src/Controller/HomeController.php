@@ -15,4 +15,11 @@ class HomeController extends AbstractController
             'current_menu' => 'home'
         ]);
     }
+    #[Route('/oups', name: 'home_exception')]
+    public function exception(): Response 
+    {
+        return $this->render('home/exception.html.twig', [
+            'current_menu' => 'home'
+        ]);
+    }
 }
