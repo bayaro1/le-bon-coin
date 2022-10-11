@@ -23,9 +23,7 @@
                 </div>
             </div>
             <div class="col align-self-end">
-                <form action="{{ path('cart_add', {'id': product.id}) }}" method="post">
-                    <button class="btn" name="url" value="{{ app.request.requesturi }}"><i {% if cart_service.exists(product.id) %}style="font-size: 1.3em; color: orange;" class="bi bi-heart-fill"{% else %}style="font-size: 1.3em; color: grey;" class="bi bi-heart" {% endif %}></i></button>
-                </form>
+                <i value="{{ product.id }}" {% if cart_service.exists(product.id) %}style="font-size: 1.3em; color: orange;" class="bi bi-heart-fill heart"{% else %}style="font-size: 1.3em; color: grey;" class="bi bi-heart heart" {% endif %}></i></button>
             </div>
         </div>
     </a>

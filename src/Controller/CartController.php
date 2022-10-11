@@ -24,7 +24,7 @@ class CartController extends AbstractController
         {
             $this->cartService->addOrRemove($product->getId());
         }
-        return $this->redirect($request->request->get('url'));
+        return $this->redirect('/');
     }
 
     #[Route('/favoris', name: 'cart_index')]
