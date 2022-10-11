@@ -59,12 +59,11 @@ class SecurityController extends AbstractController
                 $form->get('_token2FA')->addError(new FormError($error->getMessage()));
             }
             else
-            {
-                $form->get('_password')->addError(new FormError($error->getMessage()));
+            { 
+                $form->get('_password')->addError(new FormError('Identifiants invalides !'));
             }
         }
 
-        dump($form->createView());
         return $this->render('security/login.html.twig', [
             'current_menu' => 'login',
             'form' => $form->createView()

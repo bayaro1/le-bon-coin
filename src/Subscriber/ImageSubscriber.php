@@ -38,8 +38,6 @@ class ImageSubscriber implements EventSubscriberInterface
         }
         $picture = $lifecycleEventArgs->getObject();
         $imagePath = $this->helper->asset($picture, 'uploadedFile');
-        $this->cacheManager->remove($imagePath, 'my_thumb');
-        $this->cacheManager->remove($imagePath, 'my_first');
-        $this->cacheManager->remove($imagePath, 'my_mini');
+        $this->cacheManager->remove($imagePath, ['my_thumb', 'my_first', 'my_mini']);
     }
 }
