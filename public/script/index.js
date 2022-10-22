@@ -9,9 +9,10 @@
 
 
 
-const elts = document.querySelectorAll('.heart');
-for(let elt of elts) {
+
+document.querySelectorAll('.heart').forEach(function(elt) {
     elt.addEventListener('click', function(e) {
+        elt = e.currentTarget;
         const id = elt.getAttribute('value');
         e.preventDefault();
         e.stopPropagation();
@@ -25,7 +26,6 @@ for(let elt of elts) {
             if(res.ok) {
                 let color = elt.style.color;
                 if(color === 'orange') {
-                    console.log('change orange par grey');
                     elt.classList.replace('bi-heart-fill', 'bi-heart');
                     elt.style.color = 'grey';
                 }
@@ -38,5 +38,5 @@ for(let elt of elts) {
         .catch(function(error) {
             //on fait rien
         })
-    })
-}
+    });
+});
