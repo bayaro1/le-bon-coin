@@ -1,30 +1,29 @@
 
-    <a href="{{ path('product_show', {'category': product.category.name, 'product_id': product.id}) }}" class="card mb-3" style="max-width: 700px; text-decoration: none; color: black;">
-        <div class="row g-0">
-            <div class="col-md-4">
-            {% if product.firstPicture is not same as null %}
-
-                <img src="{{ vich_uploader_asset(product.firstPicture, 'uploadedFile') | imagine_filter('my_thumb') }} " class="img-fluid rounded-start" style="height: 200px;" alt="...">
-            
-            {% else %}
-                <img src="{{ '/images/products/lorem.jpg' | imagine_filter('my_thumb') }}"  class="img-fluid rounded-start" style="height: 200px;" alt="...">
-            {% endif %}
-            
-            </div>
-            <div class="col-md-7">
-                <div class="card-body">
-                    <h5 class="card-title">{{ product.title }}</h5>
-                    <h5 class="card-title">{{ product.price | price_formater() }}</h5>
-                    <p class="card-text mt-4">
-                            <small class="text-muted">{{ product.category.name}}</small><br>
-                            <small class="text-muted">{{ product.city}} {{ product.postalCode }}</small><br>
-                            <small class="text-muted">{{ product.createdAt | date_formater }}</small>
-                    </p>
+    <div id="product-card" style="max-width: 700px;">
+        <a class="card mb-3 product-showPath" style="text-decoration: none; color: black;">
+            <div class="row g-0">
+                <div class="col-md-4">
+                    <img class="img-fluid rounded-start product-firstPicture" style="height: 200px;" alt="...">
+                </div>
+                <div class="col-md-7">
+                    <div class="card-body">
+                        <h5 class="card-title product-title"></h5>    
+                        <h5 class="card-title product-price"></h5>   
+                        <p class="card-text mt-4">
+                                <small class="text-muted product-categoryName"></small><br>    {# category_name #}
+                                <small class="text-muted">
+                                    <span class="product-city"></span>
+                                    <span class="product-postalCode"></span>
+                                </small>
+                                <br>
+                                <small class="text-muted product-createdAt"></small>  {# createdAt #}
+                        </p>
+                    </div>
+                </div>
+                <div class="col align-self-end">
+                    <i class="product-cartIndicator bi bi-heart"></i></button>
                 </div>
             </div>
-            <div class="col align-self-end">
-                <i value="{{ product.id }}" {% if cart_service.exists(product.id) %}style="font-size: 1.3em; color: orange;" class="bi bi-heart-fill heart"{% else %}style="font-size: 1.3em; color: grey;" class="bi bi-heart heart" {% endif %}></i></button>
-            </div>
-        </div>
-    </a>
+        </a>
+    </div>
     

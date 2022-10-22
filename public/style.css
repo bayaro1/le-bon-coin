@@ -7,3 +7,12 @@
     border-bottom: solid orange;
 }
 
+i.product-cartIndicator.bi-heart-fill {
+    font-size: 1.3em; 
+    color: orange;
+}
+
+i.product-cartIndicator.bi-heart {
+    font-size: 1.3em;
+    color: grey;
+}

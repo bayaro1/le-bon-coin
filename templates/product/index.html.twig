@@ -2,6 +2,10 @@
 
 {% block title %}Recherche - lebongroin{% endblock %}
 
+{% block my_js %}
+    <script src="/script/product/index.js" type="module" defer></script>
+{% endblock %}
+
 {% block content %}
 
     {{ form_start(search_filter_form)}}
@@ -13,7 +17,7 @@
         <h4 class="mb-4">Annonces{% if search_filter.qSearch is not null %} "{{ search_filter.qSearch }}"{% endif %} : {% if search_filter.city is not null %}{{ search_filter.city }}{% else %}Toute la France{% endif %}</h4>
         
 
-        {% if paginator.items is empty %}
+        {% if no_results %}
             <p>Désolé, nous n'avons pas ça sous la main !</p>
         {% else %}
             {% include "product/_sort_filter.html.twig" %}
@@ -23,23 +27,32 @@
     {{ form_end(search_filter_form) }}
     
 
-    {% for product in paginator.items %}
-        {% include "product/_product_card.html.twig" %}
-    {% endfor %}
-
-
-    <div style="max-width: 700px" class="d-grid gap-2 mt-4 mb-4">
-        <a class="btn" style="background-color: orange; color: white;"><i class="bi bi-bell"> Sauvegarder la recherche</i></a>
+    <div id="product-list">
     </div>
 
-    <br>
 
-    {# pagination links #}
-    {% autoescape false %}
-        {{ paginator.paginationLinks }}
-    {% endautoescape %}
+    {# API infinitePagination #}
+    <div 
+        id="infinite-pagination"
+        data-endpoint="{{ path('product_infinitePagination', {
+            category: app.request.get('category'),
+            qSearch: app.request.get('qSearch'),
+            city: app.request.get('city'),
+            sort: app.request.get('sort')
+        }) }}"
+        data-container="product-list"
+        data-template="product-card-template"
+        data-itemname="product"
+        data-limit="5"
+        style="max-width: 700px; text-align: center;"
+    >
+        <div class="spinner-border" role="status"></div>
+    </div>
 
-    <br><br>
+
+    <template id="product-card-template">
+        {% include "product/_product_card.html.twig" %}
+    </template>
 
 
 {% endblock %}

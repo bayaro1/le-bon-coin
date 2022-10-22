@@ -8,7 +8,9 @@ use App\Service\Paginator;
 use App\Form\SearchFilterType;
 use App\DataModel\SearchFilter;
 use App\DataModel\SortFilter;
+use App\Entity\Picture;
 use App\Form\SortFilterType;
+use App\JavascriptAdaptation\TemplatingClassAdaptor\ProductAdaptor;
 use App\Repository\PictureRepository;
 use App\Repository\ProductRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -17,33 +19,44 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Vich\UploaderBundle\Storage\StorageInterface;
 
 class ProductController extends AbstractController
 {
-    private ProductRepository $repository;
 
-    private EntityManagerInterface $em;
-
-    public function __construct(ProductRepository $repository, EntityManagerInterface $em)
+    public function __construct(
+            private ProductRepository $repository, 
+            private EntityManagerInterface $em,
+            private ProductAdaptor $productAdaptor
+        )
     {
-        $this->repository = $repository;
-        $this->em = $em;
+    }
+
+    #[Route('/annonces/chargement-des-produits-suivants', name: 'product_infinitePagination')]
+    public function infinitePagination(Request $request): Response 
+    {
+        $searchFilter = new SearchFilter;
+        $searchFilterForm = $this->createForm(SearchFilterType::class, $searchFilter);
+        $searchFilterForm->handleRequest($request);
+
+        $products = $this->repository->findFiltered($searchFilter, $request->get('offset'), $request->get('limit'));
+        
+        return new Response(json_encode($this->productAdaptor->adapte($products)));
     }
 
 
     #[Route('/annonces', name: 'product_index')]
-    public function index(Paginator $paginator, Request $request): Response
+    public function index(Request $request): Response
     {
         $searchFilter = new SearchFilter;
         $searchFilterForm = $this->createForm(SearchFilterType::class, $searchFilter);
 
         $searchFilterForm->handleRequest($request);
 
-        $paginator = $this->repository->findPaginatedFiltered($request, $searchFilter, 5);
 
         return $this->render('product/index.html.twig', [
             'current_menu' => 'product_view',
-            'paginator' => $paginator,
+            'no_results' => $this->repository->countFiltered($searchFilter) <= 0,
             'search_filter_form' => $searchFilterForm->createView(),
             'search_filter' => $searchFilter
         ]);

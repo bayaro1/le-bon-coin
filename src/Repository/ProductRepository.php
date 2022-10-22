@@ -31,6 +31,38 @@ class ProductRepository extends ServiceEntityRepository
         $this->pictureRepository = $pictureRepository;
     }
 
+    public function findFiltered(SearchFilter $searchFilter, int $offset = 0, int $limit = 10)
+    {
+        $qb = $this->createQueryBuilder('p')
+                    ->select('p', 'c')
+                    ->join('p.category', 'c')
+                    ->orderBy('p.createdAt', 'desc')
+                    ->setFirstResult($offset)
+                    ->setMaxResults($limit)
+                    ;
+        
+        $this->applyFilters($qb, $searchFilter);
+        $products = $qb->getQuery()
+                    ->getResult()
+                    ;
+        $this->hydrateWithFirstPicture($products);
+        return $products;
+    }
+
+    public function countFiltered(SearchFilter $searchFilter)
+    {
+        $qb = $this->createQueryBuilder('p')
+                    ->select('p.id')
+                    ->join('p.category', 'c')
+                    ;
+
+        $this->applyFilters($qb, $searchFilter);
+        $result = $qb->getQuery()
+                    ->getResult()
+                    ;
+        return count($result);
+    }
+
 
     public function findPaginatedFiltered(Request $request, SearchFilter $searchFilter, ?int $perPage = 5):Paginator
     {

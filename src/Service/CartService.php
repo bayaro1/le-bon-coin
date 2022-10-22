@@ -88,7 +88,7 @@ class CartService
         return (in_array($id, $this->getCart()));
     }
 
-    private function getCart()
+    public function getCart()
     {
         return $this->request->getSession()->get('cart', []);
     }

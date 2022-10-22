@@ -37,7 +37,7 @@ class ExceptionSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            'kernel.exception' => 'onKernelException',
+            // 'kernel.exception' => 'onKernelException',
         ];
     }
 }
