@@ -4,6 +4,7 @@ namespace App\JavascriptAdaptation\TemplatingClassAdaptor;
 use App\Entity\Picture;
 use App\Entity\Product;
 use App\Service\CartService;
+use Liip\ImagineBundle\Imagine\Cache\CacheManager;
 use Vich\UploaderBundle\Storage\StorageInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -13,8 +14,9 @@ class ProductAdaptor
 
     public function __construct(
         private UrlGeneratorInterface $urlGenerator,
+        private CacheManager $cacheManager,
         private StorageInterface $storageInterface,
-        CartService $cartService
+        CartService $cartService,
     )
     {
         $this->cart = $cartService->getCart();
@@ -57,7 +59,7 @@ class ProductAdaptor
     {
         if($product->getFirstPicture() !== null)
         {
-            return $this->storageInterface->resolveUri($product->getFirstPicture(), 'uploadedFile', Picture::class);
+            return $this->cacheManager->getBrowserPath($this->storageInterface->resolveUri($product->getFirstPicture(), 'uploadedFile', Picture::class), 'my_mini');
         }
         else
         {

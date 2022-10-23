@@ -31,6 +31,13 @@ class SearchSortType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => SearchSort::class,
+            'method' => 'GET',
+            'csrf_protection' => false
         ]);
+    }
+
+    public function getBlockPrefix()
+    {
+        return '';
     }
 }

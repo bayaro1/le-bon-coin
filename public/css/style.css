@@ -1,0 +1,36 @@
+.nav-link {
+    color: black!important;
+}
+
+.nav-link:hover{
+    border-bottom: solid orange;
+}
+
+
+.underlined{
+    border-bottom: solid orange;
+}
+
+i.product-cartIndicator.bi-heart-fill {
+    font-size: 1.3em; 
+    color: orange;
+}
+
+i.product-cartIndicator.bi-heart {
+    font-size: 1.3em;
+    color: grey;
+}
+
+.img-mini {
+    width: 60px;
+    height: 50px;
+}
+
+.img-mini:hover {
+    cursor: pointer;
+    border: solid grey 1px;
+}
+
+.img-mini.is-selected {
+    border: solid orange 6px;
+}

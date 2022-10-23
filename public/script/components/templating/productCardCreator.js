@@ -27,6 +27,7 @@ export const productCardCreator = function(template, product) {
     card.querySelector('.product-categoryName').innerText = product.categoryName;
     card.querySelector('.product-city').innerText = product.city;
     card.querySelector('.product-postalCode').innerText = product.postalCode;
+    card.querySelector('.product-createdAt').innerText = product.createdAt;
 
     card.querySelector('.product-showPath').setAttribute('href', product.showPath);
     card.querySelector('.product-firstPicture').setAttribute('src', product.firstPicturePath);

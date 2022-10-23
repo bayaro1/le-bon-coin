@@ -31,7 +31,7 @@
     {# API infinitePagination #}
     <div 
         id="infinite-pagination"
-        data-endpoint="{{ 'https://localhost:8000' ~ path('product_infinitePagination', {
+        data-endpoint="{{ 'https://localhost:8000' ~ path('product_loadPagination', {
             category: app.request.get('category'),
             qSearch: app.request.get('qSearch'),
             city: app.request.get('city')

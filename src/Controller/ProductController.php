@@ -34,8 +34,8 @@ class ProductController extends AbstractController
     {
     }
 
-    #[Route('/annonces/chargement-des-produits-suivants', name: 'product_infinitePagination')]
-    public function infinitePagination(Request $request): Response 
+    #[Route('/annonces/chargement-des-produits-suivants', name: 'product_loadPagination')]
+    public function loadPagination(Request $request): Response 
     {
         $searchFilter = new SearchFilter;
         $searchFilterForm = $this->createForm(SearchFilterType::class, $searchFilter);

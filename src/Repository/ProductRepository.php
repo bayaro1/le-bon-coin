@@ -37,15 +37,13 @@ class ProductRepository extends ServiceEntityRepository
         $qb = $this->createQueryBuilder('p')
                     ->select('p', 'c')
                     ->join('p.category', 'c')
-                    ->orderBy('p.createdAt', 'desc')
                     ->setFirstResult($offset)
                     ->setMaxResults($limit)
                     ;
-        
-        $this->applyFilters($qb, $searchFilter);
         $this->applySort($qb, $searchSort);
+        $this->applyFilters($qb, $searchFilter);
         $products = $qb->getQuery()
-                    ->getResult()
+                        ->getResult()
                     ;
         $this->hydrateWithFirstPicture($products);
         return $products;
@@ -125,6 +123,11 @@ class ProductRepository extends ServiceEntityRepository
         {
             $qb->orderBy('p.' . $searchSort->getSortField(), $searchSort->getSortOrder());
         }
+        else
+        {
+            $qb->orderBy('p.createdAt', 'DESC');
+        }
+        
     }
 
     /**

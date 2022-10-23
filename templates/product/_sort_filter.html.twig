@@ -4,10 +4,13 @@
     <div style="width: 40%;">
         <div class="row">
             <div class="col-5">
-                {{ form_widget(search_sort_form) }}
+                {{ form_row(search_sort_form.sort, {
+                    attr: {
+                        class: 'sort-select'
+                    }
+                }) }}
             </div>
             <div class="col-7">
-                <button type="submit" class="btn" style="background-color: orange; color: white; font-weight: bold; width: 70%">Trier</button>
             </div>
         </div>
     </div>
