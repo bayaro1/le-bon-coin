@@ -16,3 +16,17 @@ i.product-cartIndicator.bi-heart {
     font-size: 1.3em;
     color: grey;
 }
+
+.img-mini {
+    width: 60px;
+    height: 50px;
+}
+
+.img-mini:hover {
+    cursor: pointer;
+    border: solid grey 1px;
+}
+
+.img-mini.is-selected {
+    border: solid orange 6px;
+}

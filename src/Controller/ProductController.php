@@ -64,13 +64,11 @@ class ProductController extends AbstractController
 
     #[Route('/{category}/{product_id}', name: 'product_show')]
     #[ParamConverter('product', options: ['mapping' => ['product_id' => 'id']])]
-    public function show(Product $product, Request $request)
+    public function show(Product $product)
     {
-        $pos = $request->get('pos') ?: 0;
-        
-        if($product->getPictures()->get($pos))
+        if($product->getPictures()->count() > 0)
         {
-            $product->setFirstPicture($product->getPictures()->get($pos));
+            $product->setFirstPicture($product->getPictures()->get(0));
         }
 
         return $this->render('product/show.html.twig', [
