@@ -2,24 +2,26 @@
 
 namespace App\Controller;
 
+use App\Entity\Picture;
 use App\Entity\Product;
 use App\Form\ProductType;
 use App\Service\Paginator;
+use App\Form\SearchSortType;
+use App\Form\SortFilterType;
+use App\DataModel\SearchSort;
+use App\DataModel\SortFilter;
 use App\Form\SearchFilterType;
 use App\DataModel\SearchFilter;
-use App\DataModel\SortFilter;
-use App\Entity\Picture;
-use App\Form\SortFilterType;
-use App\JavascriptAdaptation\TemplatingClassAdaptor\ProductAdaptor;
 use App\Repository\PictureRepository;
 use App\Repository\ProductRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Vich\UploaderBundle\Storage\StorageInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\JavascriptAdaptation\TemplatingClassAdaptor\ProductAdaptor;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 class ProductController extends AbstractController
 {
@@ -39,7 +41,11 @@ class ProductController extends AbstractController
         $searchFilterForm = $this->createForm(SearchFilterType::class, $searchFilter);
         $searchFilterForm->handleRequest($request);
 
-        $products = $this->repository->findFiltered($searchFilter, $request->get('offset'), $request->get('limit'));
+        $searchSort = new SearchSort;
+        $searchSortForm = $this->createForm(SearchSortType::class, $searchSort);
+        $searchSortForm->handleRequest($request);
+
+        $products = $this->repository->findFiltered($searchFilter, $searchSort, $request->get('offset'), $request->get('limit'));
         
         return new Response(json_encode($this->productAdaptor->adapte($products)));
     }
@@ -50,14 +56,15 @@ class ProductController extends AbstractController
     {
         $searchFilter = new SearchFilter;
         $searchFilterForm = $this->createForm(SearchFilterType::class, $searchFilter);
-
         $searchFilterForm->handleRequest($request);
 
+        $searchSortForm = $this->createForm(SearchSortType::class);
 
         return $this->render('product/index.html.twig', [
             'current_menu' => 'product_view',
             'no_results' => $this->repository->countFiltered($searchFilter) <= 0,
             'search_filter_form' => $searchFilterForm->createView(),
+            'search_sort_form' => $searchSortForm->createView(),
             'search_filter' => $searchFilter
         ]);
     }

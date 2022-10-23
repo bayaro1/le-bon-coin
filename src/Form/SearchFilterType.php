@@ -28,18 +28,6 @@ class SearchFilterType extends AbstractType
                 'choice_value' => 'name', 
                 'required' => false
             ])
-
-            ->add('sort', ChoiceType::class, [
-                'required' => false,
-                'label' => false,
-                'choices' => [
-                    'Tri : Plus récentes' => SearchFilter::DATE_DESC,
-                    'Tri : Plus anciennes' => SearchFilter::DATE_ASC,
-                    'Tri : Prix croissants' => SearchFilter::PRICE_ASC,
-                    'Tri : Prix décroissants' => SearchFilter::PRICE_DESC
-                ],
-                'placeholder' => 'Tri : Pertinence'
-            ])
         ;
     }
 

@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Product;
 use App\Service\Paginator;
+use App\DataModel\SearchSort;
 use Doctrine\ORM\QueryBuilder;
 use App\DataModel\SearchFilter;
 use Doctrine\Persistence\ManagerRegistry;
@@ -31,7 +32,7 @@ class ProductRepository extends ServiceEntityRepository
         $this->pictureRepository = $pictureRepository;
     }
 
-    public function findFiltered(SearchFilter $searchFilter, int $offset = 0, int $limit = 10)
+    public function findFiltered(SearchFilter $searchFilter, SearchSort $searchSort, int $offset = 0, int $limit = 10)
     {
         $qb = $this->createQueryBuilder('p')
                     ->select('p', 'c')
@@ -42,6 +43,7 @@ class ProductRepository extends ServiceEntityRepository
                     ;
         
         $this->applyFilters($qb, $searchFilter);
+        $this->applySort($qb, $searchSort);
         $products = $qb->getQuery()
                     ->getResult()
                     ;
@@ -64,35 +66,35 @@ class ProductRepository extends ServiceEntityRepository
     }
 
 
-    public function findPaginatedFiltered(Request $request, SearchFilter $searchFilter, ?int $perPage = 5):Paginator
-    {
-        $this->paginator->configure($request, $this->countQuery($searchFilter), $this->findFilteredQuery($searchFilter), $perPage);
-        $this->hydrateWithFirstPicture($this->paginator->getItems());
-        return $this->paginator;
-    }
+    // public function findPaginatedFiltered(Request $request, SearchFilter $searchFilter, ?int $perPage = 5):Paginator
+    // {
+    //     $this->paginator->configure($request, $this->countQuery($searchFilter), $this->findFilteredQuery($searchFilter), $perPage);
+    //     $this->hydrateWithFirstPicture($this->paginator->getItems());
+    //     return $this->paginator;
+    // }
 
-    public function countQuery(SearchFilter $searchFilter)
-    {
-        $qb = $this->createQueryBuilder('p')
-                    ->select('p.id')
-                    ->join('p.category', 'c')
-                    ;
+    // public function countQuery(SearchFilter $searchFilter)
+    // {
+    //     $qb = $this->createQueryBuilder('p')
+    //                 ->select('p.id')
+    //                 ->join('p.category', 'c')
+    //                 ;
 
-        $this->applyFilters($qb, $searchFilter);
-        return $qb->getQuery();
-    }
+    //     $this->applyFilters($qb, $searchFilter);
+    //     return $qb->getQuery();
+    // }
 
-    public function findFilteredQuery(SearchFilter $searchFilter)
-    {
-        $qb = $this->createQueryBuilder('p')
-                    ->select('p', 'c')
-                    ->join('p.category', 'c')
-                    ->orderBy('p.createdAt', 'desc')
-                    ;
+    // public function findFilteredQuery(SearchFilter $searchFilter)
+    // {
+    //     $qb = $this->createQueryBuilder('p')
+    //                 ->select('p', 'c')
+    //                 ->join('p.category', 'c')
+    //                 ->orderBy('p.createdAt', 'desc')
+    //                 ;
         
-        $this->applyFilters($qb, $searchFilter);
-        return $qb->getQuery();
-    }
+    //     $this->applyFilters($qb, $searchFilter);
+    //     return $qb->getQuery();
+    // }
 
     private function applyFilters(QueryBuilder $qb, SearchFilter $searchFilter)
     {
@@ -114,11 +116,15 @@ class ProductRepository extends ServiceEntityRepository
                 ->setParameter('q', '%'.$searchFilter->qSearch.'%')
                 ;
         }
-        if($searchFilter->getSortField() !== null)
-        {
-            $qb->orderBy('p.' . $searchFilter->getSortField(), $searchFilter->getSortOrder());
-        }
 
+    }
+
+    private function applySort(QueryBuilder $qb, SearchSort $searchSort)
+    {
+        if($searchSort->getSortField() !== null)
+        {
+            $qb->orderBy('p.' . $searchSort->getSortField(), $searchSort->getSortOrder());
+        }
     }
 
     /**

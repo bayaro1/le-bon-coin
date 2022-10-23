@@ -8,26 +8,23 @@
 
 {% block content %}
 
-    {{ form_start(search_filter_form)}}
 
-        {% include "product/_search_filters.html.twig" %}
-
-
-        
-        <h4 class="mb-4">Annonces{% if search_filter.qSearch is not null %} "{{ search_filter.qSearch }}"{% endif %} : {% if search_filter.city is not null %}{{ search_filter.city }}{% else %}Toute la France{% endif %}</h4>
-        
-
-        {% if no_results %}
-            <p>Désolé, nous n'avons pas ça sous la main !</p>
-        {% else %}
-            {% include "product/_sort_filter.html.twig" %}
-        {% endif %}
+    {% include "product/_search_filters.html.twig" %}
 
     
-    {{ form_end(search_filter_form) }}
+    <h4 class="mb-4">Annonces{% if search_filter.qSearch is not null %} "{{ search_filter.qSearch }}"{% endif %} : {% if search_filter.city is not null %}{{ search_filter.city }}{% else %}Toute la France{% endif %}</h4>
+    
+
+    {% if no_results %}
+        <p>Désolé, nous n'avons pas ça sous la main !</p>
+    {% else %}
+        {% include "product/_sort_filter.html.twig" %}
+    {% endif %}
+
     
 
     <div id="product-list">
+        {# les produits sont insérés ici en js #}
     </div>
 
 
@@ -37,13 +34,13 @@
         data-endpoint="{{ 'https://localhost:8000' ~ path('product_infinitePagination', {
             category: app.request.get('category'),
             qSearch: app.request.get('qSearch'),
-            city: app.request.get('city'),
-            sort: app.request.get('sort')
+            city: app.request.get('city')
         }) }}"
         data-container="#product-list"
         data-template="#product-card-template"
         data-itemname="product"
         data-limit="5"
+        data-sort=""
         style="max-width: 700px; text-align: center;"
     >
         <div class="spinner-border" role="status"></div>
