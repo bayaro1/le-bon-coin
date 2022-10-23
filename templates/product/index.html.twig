@@ -34,14 +34,14 @@
     {# API infinitePagination #}
     <div 
         id="infinite-pagination"
-        data-endpoint="{{ path('product_infinitePagination', {
+        data-endpoint="{{ 'https://localhost:8000' ~ path('product_infinitePagination', {
             category: app.request.get('category'),
             qSearch: app.request.get('qSearch'),
             city: app.request.get('city'),
             sort: app.request.get('sort')
         }) }}"
-        data-container="product-list"
-        data-template="product-card-template"
+        data-container="#product-list"
+        data-template="#product-card-template"
         data-itemname="product"
         data-limit="5"
         style="max-width: 700px; text-align: center;"

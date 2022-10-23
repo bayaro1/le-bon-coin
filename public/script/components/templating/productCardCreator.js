@@ -1,6 +1,26 @@
-export const productCardCreator = function(templateId, product) {
+/**
+ * @typedef Product
+ * @property {string} title
+ * @property {string} price
+ * @property {string} categoryName
+ * @property {string} city
+ * @property {string} postalCode
+ * @property {string} showPath
+ * @property {string} firstPicturePath
+ * @property {string} cartAddPath
+ * @property {boolean} inCart
+ */
 
-    const card = document.getElementById(templateId).content.cloneNode(true).firstElementChild;
+
+/**
+ * 
+ * @param {HTMLTemplateElement} template 
+ * @param {Product} product 
+ * @returns 
+ */
+export const productCardCreator = function(template, product) {
+
+    const card = template.content.cloneNode(true).firstElementChild;
 
     card.querySelector('.product-title').innerText = product.title;
     card.querySelector('.product-price').innerText = product.price;
