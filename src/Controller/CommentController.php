@@ -1,9 +1,13 @@
 <?php 
 namespace App\Controller;
 
+use App\Entity\Comment;
 use App\Entity\Product;
+use App\Entity\User;
 use App\JavascriptAdaptation\TemplatingClassAdaptor\CommentAdaptor;
 use App\Repository\CommentRepository;
+use DateTime;
+use DateTimeImmutable;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -29,6 +33,15 @@ class CommentController extends AbstractController
     #[Route('/produit{id}/ajout-de-commentaire', name: 'comment_new')]
     public function new(Request $request, Product $product): Response
     {
-        return new Response('ok');
+        $comment = new Comment;
+        $user = new User;
+        $user->setEmail($request->get('email'));
+        $comment->setUser($user)
+                ->setContent($request->get('content'))
+                ->setCreatedAt(new DateTimeImmutable())
+                ;
+        //a faire plus tard, enregistrer le commentaire pour de vrai  (adapter pour qu'il faille être connecté pour poster un commentaire)
+
+        return new Response(json_encode($this->commentAdaptor->adapte([$comment])[0]));
     }
 }

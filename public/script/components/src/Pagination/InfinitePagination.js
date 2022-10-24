@@ -1,6 +1,7 @@
 import { myGetFetch } from "../../helpers/api.js";
 import { createAlert } from "../../helpers/dom.js";
 import { cardCreators } from "../../templating/cardCreators.js";
+import { createCorrespondingCard } from "../../templating/createCorrespondingCard.js";
 
 export class InfinitePagination {
 
@@ -88,7 +89,7 @@ export class InfinitePagination {
                     const card = cardCreators[this.#itemname](this.#template, item);
                     this.#container.append(card);
                 } else if(this.#correspondance) {
-                    this.#container.append(this.#createCorrespondingCard(item, this.#correspondance));
+                    this.#container.append(createCorrespondingCard(this.#template, item, this.#correspondance));
                 } else {
                     throw new Error('InfinitePagination ne sait pas comment placer les données reçues dans le template : Veuillez renseigner soit une balise data-itemname soit data-corresponding dans l\'élément infinite-pagination en html')
                 }
@@ -105,20 +106,7 @@ export class InfinitePagination {
         this.#loading = false;
     }
 
-    /**
-     * 
-     * @param {Object} item 
-     * @param {Object} correspondance 
-     * @returns {HTMLElement}
-     */
-    #createCorrespondingCard(item, correspondance)
-    {
-        const card = this.#template.content.cloneNode(true).firstElementChild;
-        for(const [itemKey, eltClass] of Object.entries(correspondance)) {
-            card.querySelector(eltClass).innerText = item[itemKey];
-        }
-        return card;
-    }
+    
 }
 
 

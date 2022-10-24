@@ -2,6 +2,7 @@
     id="comment-form" 
     class="form mt-4"
     data-endpoint={{ path('comment_new', {id: product.id}) }}
+    data-correspondance='{"user": ".comment-user", "content": ".comment-content", "createdAt": ".comment-createdAt"}'
 >
     <input  style="width: 380px;" class="form-control  mb-2" type="text" name="email" placeholder="Votre email...">
     <textarea  style="width: 380px;" class="form-control mb-2" type="text" name="content" placeholder="Votre commentaire..." rows="3"></textarea>
