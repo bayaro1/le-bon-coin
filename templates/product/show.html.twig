@@ -80,6 +80,35 @@
         
     </div>
 
+    <hr>
 
+    <div class="row">
+        <div class="col-7">
+            <h4>Commentaires</h4>
+            {% include "product/comment/_comment_form.html.twig" %}
+            <div id="comment-list">
+                {# commentaires #}
+            </div>
+        </div>
+
+        {# API infinitePagination #}
+        <div 
+            id="infinite-pagination"
+            data-endpoint="{{ 'https://localhost:8000' ~ path('comment_loadPagination', {
+                id: product.id
+            }) }}"
+            data-container="#comment-list"
+            data-template="#comment-card-template"
+            data-correspondance='{"user": ".comment-user", "content": ".comment-content", "createdAt": ".comment-createdAt"}'
+            data-limit="15"
+            style="max-width: 700px; text-align: center;"
+        >
+            <div class="spinner-border" role="status"></div>
+        </div>
+    </div>
+
+<template id="comment-card-template">
+    {% include "product/comment/_comment_card.html.twig" %}
+</template>
 
 {% endblock %}

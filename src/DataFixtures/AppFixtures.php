@@ -3,6 +3,7 @@
 namespace App\DataFixtures;
 
 use App\Entity\Category;
+use App\Entity\Comment;
 use Faker\Factory;
 use Faker\Generator;
 use App\Entity\Product;
@@ -112,6 +113,7 @@ class AppFixtures extends Fixture
         $categories[] = $category;
 
         /**création des produits */
+        $products = [];
         for ($i=0; $i < 100; $i++) { 
             $product = new Product;
             $manager->persist($product);
@@ -124,7 +126,25 @@ class AppFixtures extends Fixture
                     ->setCategory($faker->randomElement($categories))
                     ->setUser($faker->randomElement($users))
                     ;
+            
+            $products[] = $product;
         }
+
+        /**création des commentaires */
+
+        for($i=0; $i<4000; $i++)
+        {
+            $comment = new Comment;
+            $manager->persist($comment);
+            $comment->setUser($faker->randomElement($users))
+                    ->setProduct($faker->randomElement($products))
+                    ->setContent($faker->paragraph(random_int(1, 5)))
+                    ->setCreatedAt(new DateTimeImmutable)
+                    ;
+        }
+
+
+
 
 
         /**flush final */

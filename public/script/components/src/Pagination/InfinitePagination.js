@@ -14,6 +14,8 @@ export class InfinitePagination {
     #template
     /** @type {string} */
     #itemname
+    /** @type {object} */
+    #correspondance
     /** @type {number} */
     #limit
     /** @type {number} */
@@ -42,7 +44,9 @@ export class InfinitePagination {
         this.#limit = element.dataset.limit;
         this.sort = element.dataset.sort;
         this.#offset = 0;
-
+        if(element.dataset.correspondance) {
+            this.#correspondance = JSON.parse(element.dataset.correspondance);
+        }
         this.#observer = new IntersectionObserver((entries) => {
             for(const entry of entries) {
                 if(entry.isIntersecting) {
@@ -80,8 +84,14 @@ export class InfinitePagination {
                 this.#disconnected = true;
             }
             for(const item of items) {
-                const card = cardCreators[this.#itemname](this.#template, item);
-                this.#container.append(card);
+                if(this.#itemname) {
+                    const card = cardCreators[this.#itemname](this.#template, item);
+                    this.#container.append(card);
+                } else if(this.#correspondance) {
+                    this.#container.append(this.#createCorrespondingCard(item, this.#correspondance));
+                } else {
+                    throw new Error('InfinitePagination ne sait pas comment placer les données reçues dans le template : Veuillez renseigner soit une balise data-itemname soit data-corresponding dans l\'élément infinite-pagination en html')
+                }
             }
             this.#offset += items.length;
 
@@ -93,6 +103,21 @@ export class InfinitePagination {
             console.error(e);
         }
         this.#loading = false;
+    }
+
+    /**
+     * 
+     * @param {Object} item 
+     * @param {Object} correspondance 
+     * @returns {HTMLElement}
+     */
+    #createCorrespondingCard(item, correspondance)
+    {
+        const card = this.#template.content.cloneNode(true).firstElementChild;
+        for(const [itemKey, eltClass] of Object.entries(correspondance)) {
+            card.querySelector(eltClass).innerText = item[itemKey];
+        }
+        return card;
     }
 }
 

@@ -69,10 +69,14 @@ class Product
     #[ORM\ManyToMany(targetEntity: Cart::class, mappedBy: 'products')]
     private $carts;
 
+    #[ORM\OneToMany(mappedBy: 'product', targetEntity: Comment::class, orphanRemoval: true)]
+    private $comments;
+
     public function __construct()
     {
         $this->pictures = new ArrayCollection();
         $this->carts = new ArrayCollection();
+        $this->comments = new ArrayCollection();
     }
 
     #[ORM\PrePersist]
@@ -281,6 +285,36 @@ class Product
     {
         if ($this->carts->removeElement($cart)) {
             $cart->removeProduct($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Comment>
+     */
+    public function getComments(): Collection
+    {
+        return $this->comments;
+    }
+
+    public function addComment(Comment $comment): self
+    {
+        if (!$this->comments->contains($comment)) {
+            $this->comments[] = $comment;
+            $comment->setProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removeComment(Comment $comment): self
+    {
+        if ($this->comments->removeElement($comment)) {
+            // set the owning side to null (unless already changed)
+            if ($comment->getProduct() === $this) {
+                $comment->setProduct(null);
+            }
         }
 
         return $this;
