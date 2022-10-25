@@ -1,0 +1,7 @@
+<div style="margin-top: 15px; margin-bottom: 0px;">
+{% if app.user %}
+   <i class="bi bi-person-fill"></i> Poster un commentaire en tant que <strong>{{ app.user.username }}</strong>
+{% else %}
+   <a href="{{ path('security_login') }}" style="color: grey;"><i class="bi bi-person"></i> Connectez vous pour poster un commentaire</a>
+{% endif %}
+</div>

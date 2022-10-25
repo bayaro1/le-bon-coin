@@ -2,9 +2,11 @@
     id="comment-form" 
     class="form mt-4"
     data-endpoint={{ path('comment_new', {id: product.id}) }}
+    data-container="#comment-list"
+    data-template="#comment-card-template"
     data-correspondance='{"user": ".comment-user", "content": ".comment-content", "createdAt": ".comment-createdAt"}'
 >
-    <input  style="width: 380px;" class="form-control  mb-2" type="text" name="email" placeholder="Votre email...">
-    <textarea  style="width: 380px;" class="form-control mb-2" type="text" name="content" placeholder="Votre commentaire..." rows="3"></textarea>
-    <button class='btn btn-primary' type="submit">Envoyer</button>
+    <textarea id="comment-form-content"  style="width: 380px;" class="form-control mb-2" type="text" name="content" placeholder="Votre commentaire..." rows="3"></textarea>
+    <div id="comment-form-content-error"></div>
+    <button class="btn btn-primary" type="submit" {% if app.user is same as null %}disabled{% endif %}>Envoyer</button>
 </form>

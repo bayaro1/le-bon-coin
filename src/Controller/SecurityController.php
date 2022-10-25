@@ -1,31 +1,33 @@
 <?php 
 namespace App\Controller;
 
-use App\Entity\PasswordInit;
+use Exception;
 use App\Entity\User;
-use App\Exception\AuthenticationException\Authentication2FAException;
+use DateTimeImmutable;
 use App\Form\LoginType;
+use App\Entity\PasswordInit;
+use App\Service\CartService;
 use App\Form\PasswordInitType;
 use App\Form\RegistrationFormType;
-use App\Notification\EmailNotification\PasswordInitEmail;
-use App\Notification\EmailNotification\WelcomeEmail;
 use App\Repository\UserRepository;
 use App\Security\AppAuthenticator;
-use App\Service\CartService;
-use DateTimeImmutable;
+use Symfony\Component\Form\FormError;
+use Symfony\Component\Form\FormFactory;
 use Doctrine\ORM\EntityManagerInterface;
-use Exception;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\FormError;
-use Symfony\Component\Form\FormFactory;
 use Symfony\Component\Form\FormFactoryInterface;
-use Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException;
+use App\Notification\EmailNotification\WelcomeEmail;
+use App\Notification\EmailNotification\PasswordInitEmail;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Exception\AuthenticationException\Authentication2FAException;
+use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException;
 use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface;
+use App\Exception\AuthenticationException\AuthenticationNotVerifiedException;
 
 class SecurityController extends AbstractController
 {
@@ -42,9 +44,9 @@ class SecurityController extends AbstractController
     #[Route('/connexion', name: 'security_login')]
     public function login(AuthenticationUtils $authenticationUtils, Request $request): Response
     {
-        dump($request->getSession()->get(AppAuthenticator::LAST_PASSWORD));
         // get the login error if there is one
         $error = $authenticationUtils->getLastAuthenticationError();
+        dump($error);
 
         $form = $this->createForm(LoginType::class, null, [
             'choice2FA' => $error instanceof Authentication2FAException,
@@ -57,6 +59,10 @@ class SecurityController extends AbstractController
             if($error instanceof Authentication2FAException)
             {
                 $form->get('_token2FA')->addError(new FormError($error->getMessage()));
+            }
+            elseif($error instanceof AuthenticationNotVerifiedException)
+            {
+                $form->get('_username')->addError(new FormError($error->getMessage()));
             }
             else
             { 
@@ -112,7 +118,7 @@ class SecurityController extends AbstractController
     public function confirmAccount(Request $request): Response
     {
         /** @var User */
-        $user = $this->userRepository->find($request->get('user'));
+        $user = $this->userRepository->find($request->get('id'));
         if(!$user OR $user->getConfirmationToken() !== $request->get('token'))
         {
             throw new Exception('Le lien utilisé n\'est pas valide !');

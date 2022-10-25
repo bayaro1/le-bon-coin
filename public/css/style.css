@@ -34,3 +34,15 @@ i.product-cartIndicator.bi-heart {
 .img-mini.is-selected {
     border: solid orange 6px;
 }
+
+
+.form-field-invalid {
+    border: solid red 1px!important;
+    color: red!important;
+}
+
+#comment-form-content-error {
+    color: red; 
+    margin-top: 0px; 
+    margin-bottom: 10px;
+}

@@ -1,24 +1,33 @@
 <?php 
 namespace App\Controller;
 
+use DateTime;
+use Exception;
+use App\Entity\User;
+use DateTimeImmutable;
 use App\Entity\Comment;
 use App\Entity\Product;
-use App\Entity\User;
-use App\JavascriptAdaptation\TemplatingClassAdaptor\CommentAdaptor;
 use App\Repository\CommentRepository;
-use DateTime;
-use DateTimeImmutable;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Validator\ConstraintViolation;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\JavascriptAdaptation\TemplatingClassAdaptor\CommentAdaptor;
+use App\JavascriptAdaptation\TemplatingClassAdaptor\ConstraintViolationListAdaptor;
+use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class CommentController extends AbstractController
 {
     public function __construct(
         private CommentRepository $commentRepository,
-        private CommentAdaptor $commentAdaptor
+        private CommentAdaptor $commentAdaptor,
+        private ConstraintViolationListAdaptor $constraintViolationListAdaptor,
+        private ValidatorInterface $validator,
+        private EntityManagerInterface $em
     )
     {}
 
@@ -27,21 +36,40 @@ class CommentController extends AbstractController
     public function loadPagination(Product $product, Request $request): Response
     {
         $comments = $this->commentRepository->findBy(['product' => $product], ['createdAt' => 'DESC'], $request->get('limit', 15), $request->get('offset', 0));
-        return new Response(json_encode($this->commentAdaptor->adapte($comments)));
+        return new Response(json_encode($this->commentAdaptor->adapteAll($comments)));
     }
 
     #[Route('/produit{id}/ajout-de-commentaire', name: 'comment_new')]
     public function new(Request $request, Product $product): Response
     {
+        if(!$this->isGranted('ROLE_USER'))
+        {
+            return new Response(json_encode([
+                null, 
+                ['content' => 'Vous devez vous connecter avant de poster un commentaire']
+            ]));
+        }
+
         $comment = new Comment;
-        $user = new User;
-        $user->setEmail($request->get('email'));
-        $comment->setUser($user)
+        $comment->setUser($this->getUser())
+                ->setProduct($product)
                 ->setContent($request->get('content'))
                 ->setCreatedAt(new DateTimeImmutable())
                 ;
-        //a faire plus tard, enregistrer le commentaire pour de vrai  (adapter pour qu'il faille être connecté pour poster un commentaire)
 
-        return new Response(json_encode($this->commentAdaptor->adapte([$comment])[0]));
+        $constraintViolationList = $this->validator->validate($comment);
+        
+        if($constraintViolationList->count() === 0)
+        {
+            $this->em->persist($comment);
+            $this->em->flush();
+        }
+        
+        return new Response(
+            json_encode([
+                $this->commentAdaptor->adapte($comment),
+                $this->constraintViolationListAdaptor->adapte($constraintViolationList)
+            ])
+        );
     }
 }

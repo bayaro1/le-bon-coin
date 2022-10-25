@@ -3,14 +3,15 @@
 namespace App\Subscriber;
 
 use App\Entity\User;
-use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use App\Exception\AuthenticationException\Authentication2FAException;
-use App\Notification\EmailNotification\Auth2FAEmail;
 use App\Service\TokenGenerator;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
+use App\Notification\EmailNotification\Auth2FAEmail;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use App\Exception\AuthenticationException\Authentication2FAException;
 use Symfony\Component\Security\Core\Event\AuthenticationSuccessEvent;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
+use App\Exception\AuthenticationException\AuthenticationNotVerifiedException;
 
 class AuthSubscriber implements EventSubscriberInterface
 {
@@ -54,7 +55,7 @@ class AuthSubscriber implements EventSubscriberInterface
     {
         if($user->getConfirmedAt() === null)
         {
-            throw new AuthenticationException('Vous devez confirmer votre adresse e-mail', 0);
+            throw new AuthenticationNotVerifiedException('Vous devez confirmer votre adresse e-mail', 0);
         }
 
         return $this;

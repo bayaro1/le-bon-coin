@@ -39,6 +39,7 @@ class AppFixtures extends Fixture
                 ->setPassword($adminPassword)
                 ->setEmail('admin@lebongroin.fr')
                 ->setRoles(['ROLE_ADMIN'])
+                ->setConfirmedAt(new DateTimeImmutable())
                 ;
         
         $manager->persist($admin);
@@ -46,6 +47,7 @@ class AppFixtures extends Fixture
         $user->setUsername('jean')
                 ->setPassword($userPassword)
                 ->setEmail('jean@gmail.com')
+                ->setConfirmedAt(new DateTimeImmutable())
                 ;
         $manager->persist($user);
 
